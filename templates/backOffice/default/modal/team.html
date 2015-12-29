@@ -1,0 +1,60 @@
+{* CREATE Modal *}
+
+{form name="team.create"}
+{capture "team_create"}
+  {include file="form/team-create.html" form_name="team.create" team_id=$smarty.get.team_id}
+{/capture}
+
+  {include file="includes/generic-create-dialog.html"
+  dialog_id       = "team-create"
+  dialog_title    = {intl l="Create a Team" d="team.bo.default"}
+  dialog_body     = {$smarty.capture.team_create nofilter}
+dialog_ok_label     = {intl l="Create"}
+dialog_cancel_label = {intl l="Cancel"}
+
+form_action        = {url path="admin/module/Team/team"}
+form_enctype       = {form_enctype form=$form}
+}
+{/form}
+
+{* Update Modal *}
+
+{form name="team.update"}
+{capture "team_update"}
+  {form_field form=$form field="id"}
+    <input type="hidden" id="{$label_attr.for}" name="{$name}" value=""/>
+  {/form_field}
+  {include file="form/team-create.html" form_name="team.update" team_id=$smarty.get.team_id}
+{/capture}
+
+  {include file="includes/generic-create-dialog.html"
+  dialog_id       = "team-update"
+  dialog_title    = {intl l="Modify a Team" d="team.bo.default"}
+  dialog_body     = {$smarty.capture.team_update nofilter}
+dialog_ok_label     = {intl l="Save"}
+dialog_cancel_label = {intl l="Cancel"}
+
+form_action        = {url path="admin/module/Team/team/update"}
+form_enctype       = {form_enctype form=$form}
+}
+{/form}
+
+{* DELETE modal *}
+
+{capture "team_delete"}
+  {intl l="Do you really want to delete this Team ?" d="team.bo.default"}
+  <input type="hidden" name="team_id" id="team_team_delete_id" value="" />
+  <input type="hidden" name="team_id" value="{$smarty.get.team_id}" />
+{/capture}
+
+{include file="includes/generic-confirm-dialog.html"
+
+dialog_id       = "team-delete"
+dialog_title    = {intl l="Delete an entry of Team" d="team.bo.default"}
+dialog_message  = {$smarty.capture.team_delete nofilter}
+
+dialog_ok_label     = {intl l="Delete"}
+dialog_cancel_label = {intl l="Cancel"}
+
+form_action         = {token_url path='/admin/module/Team/team/delete'}
+}

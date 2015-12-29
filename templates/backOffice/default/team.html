@@ -22,9 +22,51 @@
 
     <!-- Team list -->
     <div class="general-block-decorator">
-      <div class="table-responsive">
+      {ifloop rel="team"}
+        <div class="panel-group" id="teams" role="tablist" aria-multiselectable="true">
+          {loop type="team" name="team"}
+            <div class="panel panel-default">
+              <div class="panel-heading" role="tab" id="heading-{$ID}">
+                <h4 class="panel-title">
+                  <div class="pull-right">
+                    {loop name="auth-edit" type="auth" role="ADMIN" resource="admin.module" access="UPDATE" module="Team"}
+                      <a class="btn btn-default btn-xs team-update"
+                         title="{intl l='Modify this Team' d='team.bo.default'}"
+                         data-target="#team-update" data-toggle="modal" data-id="{$ID}"
+                         data-label="{$TITLE}">
+                        <i class="glyphicon glyphicon-edit"></i>
+                      </a>
+                    {/loop}
+                    {loop name="auth-delete" type="auth" role="ADMIN" resource="admin.module" access="DELETE" module="Team"}
+                      <a class="btn btn-default btn-xs team-delete"
+                         title="{intl l='Delete this Team' d='team.bo.default'}"
+                         data-target="#team-delete" data-toggle="modal" data-id="{$ID}">
+                        <i class="glyphicon glyphicon-trash"></i>
+                      </a>
+                    {/loop}
+                  </div>
+                  <a role="button" data-toggle="collapse" data-parent="#teams" href="#collapse-{$ID}"
+                     aria-expanded="true" aria-controls="collapse-{$ID}">
+                    {$TITLE}
+                  </a>
+                </h4>
+              </div>
+              <div id="collapse-{$ID}" class="panel-collapse collapse {if $LOOP_COUNT == 1}in{/if}" role="tabpanel"
+                   aria-labelledby="heading-{$ID}">
+                <div class="panel-body">
 
-      </div>
+                </div>
+              </div>
+            </div>
+          {/loop}
+        </div>
+      {/ifloop}
+      {elseloop rel="team"}
+        <div class="alert alert-info">
+          {intl l="There is no Team" d="team.bo.default"}
+        </div>
+      {/elseloop}
     </div>
   </div>
+    {include file="modal/team.html"}
 {/block}
