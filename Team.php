@@ -12,6 +12,12 @@
 
 namespace Team;
 
+use Propel\Runtime\Connection\ConnectionInterface;
+use Team\Model\PersonFunctionQuery;
+use Team\Model\PersonImageQuery;
+use Team\Model\PersonQuery;
+use Team\Model\TeamQuery;
+use Thelia\Install\Database;
 use Thelia\Module\BaseModule;
 
 class Team extends BaseModule
@@ -19,10 +25,20 @@ class Team extends BaseModule
     /** @var string */
     const DOMAIN_NAME = 'team';
 
-    /*
-     * You may now override BaseModuleInterface methods, such as:
-     * install, destroy, preActivation, postActivation, preDeactivation, postDeactivation
-     *
-     * Have fun !
+    /**
+     * @inheritDoc
      */
+    public function postActivation(ConnectionInterface $con = null)
+    {
+        try{
+            TeamQuery::create()->findOne();
+            PersonQuery::create()->findOne();
+            PersonImageQuery::create()->findOne();
+            PersonFunctionQuery::create()->findOne();
+        }catch(\Exception $e){
+            $database = new Database($con);
+            $database->insertSql(null, [__DIR__ . "/Config/thelia.sql"]);
+        }
+    }
+
 }

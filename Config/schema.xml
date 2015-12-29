@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <database defaultIdMethod="native" name="thelia"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-          xsi:noNamespaceSchemaLocation="../../../vendor/propel/propel/resources/xsd/database.xsd" >
+          xsi:noNamespaceSchemaLocation="../../../../vendor/propel/propel/resources/xsd/database.xsd">
     <!--
     See propel documentation on http://propelorm.org for all information about schema file
 
@@ -26,5 +26,107 @@
         </behavior>
     </table>
     -->
-    <external-schema filename="local/config/schema.xml" referenceOnly="true" />
+    <table name="team" namespace="Team\Model">
+        <column autoIncrement="true" name="id" primaryKey="true" required="true" type="INTEGER"/>
+        <column name="title" size="255" type="VARCHAR"/>
+        <column name="description" type="CLOB"/>
+
+        <behavior name="timestampable"/>
+        <behavior name="i18n">
+            <parameter name="i18n_columns" value="description"/>
+        </behavior>
+        <behavior name="versionable">
+            <parameter name="log_created_at" value="true"/>
+            <parameter name="log_created_by" value="true"/>
+        </behavior>
+    </table>
+
+    <table name="person" namespace="Team\Model">
+        <column autoIncrement="true" name="id" primaryKey="true" required="true" type="INTEGER"/>
+        <column name="first_name" size="255" type="VARCHAR"/>
+        <column name="last_name" size="255" type="VARCHAR"/>
+        <column name="description" type="CLOB"/>
+
+        <behavior name="timestampable"/>
+        <behavior name="i18n">
+            <parameter name="i18n_columns" value="description"/>
+        </behavior>
+        <behavior name="versionable">
+            <parameter name="log_created_at" value="true"/>
+            <parameter name="log_created_by" value="true"/>
+        </behavior>
+    </table>
+
+    <table name="person_team_link" namespace="Team\Model">
+        <column autoIncrement="true" name="id" primaryKey="true" required="true" type="INTEGER"/>
+        <column name="person_id" required="true" type="INTEGER"/>
+        <column name="team_id" required="true" type="INTEGER"/>
+
+        <foreign-key foreignTable="person" name="fk_person_team_link_person_id" onDelete="CASCADE">
+            <reference foreign="id" local="person_id"/>
+        </foreign-key>
+
+        <foreign-key foreignTable="team" name="fk_person_team_link_team_id" onDelete="CASCADE">
+            <reference foreign="id" local="team_id"/>
+        </foreign-key>
+
+        <behavior name="timestampable"/>
+        <behavior name="versionable">
+            <parameter name="log_created_at" value="true"/>
+            <parameter name="log_created_by" value="true"/>
+        </behavior>
+    </table>
+
+    <table name="person_image" namespace="Team\Model">
+        <column autoIncrement="true" name="id" primaryKey="true" required="true" type="INTEGER"/>
+        <column name="file" size="255" type="VARCHAR"/>
+        <column name="person_id" required="true" type="INTEGER"/>
+
+        <foreign-key foreignTable="person" name="fk_person_image_person_id" onDelete="CASCADE">
+            <reference foreign="id" local="person_id"/>
+        </foreign-key>
+
+        <behavior name="timestampable"/>
+        <behavior name="versionable">
+            <parameter name="log_created_at" value="true"/>
+            <parameter name="log_created_by" value="true"/>
+        </behavior>
+    </table>
+
+    <table name="person_function" namespace="Team\Model">
+        <column autoIncrement="true" name="id" primaryKey="true" required="true" type="INTEGER"/>
+        <column name="code" size="255" type="VARCHAR"/>
+        <column name="label" size="255" type="VARCHAR"/>
+
+        <behavior name="timestampable"/>
+        <behavior name="i18n">
+            <parameter name="i18n_columns" value="label"/>
+        </behavior>
+        <behavior name="versionable">
+            <parameter name="log_created_at" value="true"/>
+            <parameter name="log_created_by" value="true"/>
+        </behavior>
+    </table>
+
+    <table name="person_function_link" namespace="Team\Model">
+        <column autoIncrement="true" name="id" primaryKey="true" required="true" type="INTEGER"/>
+        <column name="person_id" required="true" type="INTEGER"/>
+        <column name="function_id" required="true" type="INTEGER"/>
+
+        <foreign-key foreignTable="person" name="fk_person_function_link_person_id" onDelete="CASCADE">
+            <reference foreign="id" local="person_id"/>
+        </foreign-key>
+
+        <foreign-key foreignTable="person_function" name="fk_person_function_link_function_id" onDelete="CASCADE">
+            <reference foreign="id" local="function_id"/>
+        </foreign-key>
+
+        <behavior name="timestampable"/>
+        <behavior name="versionable">
+            <parameter name="log_created_at" value="true"/>
+            <parameter name="log_created_by" value="true"/>
+        </behavior>
+    </table>
+
+    <external-schema filename="local/config/schema.xml" referenceOnly="true"/>
 </database>
