@@ -12,6 +12,8 @@
         <!--
         <form name="MyFormName" class="Team\Form\MySuperForm" />
         -->
+        <form name="team.create" class="Team\Form\TeamCreateForm" />
+        <form name="team.update" class="Team\Form\TeamUpdateForm" />
     </forms>
 
     <commands>
