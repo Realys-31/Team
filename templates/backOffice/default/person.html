@@ -1,0 +1,12 @@
+{ifloop rel="person-list"}
+    <div class="row">
+        {loop name="person-list" type="person"}
+            {include file="includes/single-person.html"}
+        {/loop}
+    </div>
+{/ifloop}
+{elseloop rel="person-list"}
+    <div class="alert alert-info">
+        {intl l="There is no Person for this Team" d="team.bo.default"}
+    </div>
+{/elseloop}

@@ -12,12 +12,27 @@
     <forms>
         <form name="team.create" class="Team\Form\TeamCreateForm"/>
         <form name="team.update" class="Team\Form\TeamUpdateForm"/>
+        <form name="person.create" class="Team\Form\PersonCreateForm"/>
+        <form name="person.update" class="Team\Form\PersonUpdateForm"/>
     </forms>
 
     <services>
         <service id="team_service" class="Team\Service\TeamService">
             <call method="setDispatcher">
                 <argument type="service" id="event_dispatcher"/>
+            </call>
+        </service>
+        <service id="person_team_link_service" class="Team\Service\PersonTeamLinkService">
+            <call method="setDispatcher">
+                <argument type="service" id="event_dispatcher"/>
+            </call>
+        </service>
+        <service id="person_service" class="Team\Service\PersonService">
+            <call method="setDispatcher">
+                <argument type="service" id="event_dispatcher"/>
+            </call>
+            <call method="setLinkService">
+                <argument type="service" id="person_team_link_service"/>
             </call>
         </service>
     </services>

@@ -11,43 +11,36 @@
 /*************************************************************************************/
 /*************************************************************************************/
 
-namespace Team\Form;
+namespace Team\Event;
 
-use Symfony\Component\Validator\Constraints\NotBlank;
-use Team\Team;
-use Thelia\Form\BaseForm;
+use Symfony\Component\EventDispatcher\Event;
+use Team\Model\Person;
 
 /**
- * Class TeamCreateForm
- * @package Team\Form
+ * Class PersonEvent
+ * @package Team\Event
  */
-class TeamCreateForm extends BaseForm
+class PersonEvent extends Event
 {
+    /**
+     * @var Person $person
+     */
+    protected $person;
 
     /**
-     * @inheritDoc
+     * @return Person
      */
-    protected function buildForm()
+    public function getPerson()
     {
-        $this->formBuilder
-            ->add("title", "text", array(
-                "label" => $this->translator->trans("Title", [], Team::DOMAIN_NAME),
-                "label_attr" => ["for" => "attr-team-title"],
-                "required" => true,
-                "constraints" => array(new NotBlank(),),
-                "attr" => array()
-            ))
-            ->add("locale", "text", array(
-                "constraints" => array(
-                    new NotBlank(),
-                ),
-                "label_attr" => array("for" => "locale_create"),
-            ))
-        ;
+        return $this->person;
     }
 
-    public function getName()
+    /**
+     * @param Person $person
+     */
+    public function setPerson($person)
     {
-        return "team_create";
+        $this->person = $person;
     }
+
 }

@@ -18,4 +18,15 @@
         <default key="_controller">Team:Team:delete</default>
     </route>
 
+    <!-- Person -->
+    <route id="team.person.create" path="/admin/module/Team/person" methods="post">
+        <default key="_controller">Team:Person:create</default>
+    </route>
+    <route id="team.person.edit" path="/admin/module/Team/person/update" methods="post">
+        <default key="_controller">Team:Person:processUpdate</default>
+    </route>
+    <route id="team.person.delete" path="/admin/module/Team/person/delete" methods="post">
+        <default key="_controller">Team:Person:delete</default>
+    </route>
+
 </routes>

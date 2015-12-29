@@ -1,0 +1,37 @@
+{* CREATE Modal *}
+
+{form name="person.create"}
+{capture "person_create"}
+  {include file="form/person-create.html" form_name="person.create" person_id=$smarty.get.person_id}
+{/capture}
+
+  {include file="includes/generic-create-dialog.html"
+  dialog_id       = "person-create"
+  dialog_title    = {intl l="Create a Person" d="team.bo.default"}
+  dialog_body     = {$smarty.capture.person_create nofilter}
+dialog_ok_label     = {intl l="Create"}
+dialog_cancel_label = {intl l="Cancel"}
+
+form_action        = {url path="admin/module/Team/person"}
+form_enctype       = {form_enctype form=$form}
+}
+{/form}
+
+{* DELETE modal *}
+
+{capture "person_delete"}
+  {intl l="Do you really want to delete this Person ?" d="team.bo.default"}
+  <input type="hidden" name="person_id" id="person_delete_id" value="" />
+{/capture}
+
+{include file="includes/generic-confirm-dialog.html"
+
+dialog_id       = "person-delete"
+dialog_title    = {intl l="Delete an entry of Team" d="team.bo.default"}
+dialog_message  = {$smarty.capture.person_delete nofilter}
+
+dialog_ok_label     = {intl l="Delete"}
+dialog_cancel_label = {intl l="Cancel"}
+
+form_action         = {token_url path='/admin/module/Team/person/delete'}
+}

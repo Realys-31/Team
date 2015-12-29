@@ -30,4 +30,24 @@ class TeamEvents
     const TEAM_DELETE = "team.delete";
     const TEAM_DELETE_BEFORE = "team.delete.before";
     const TEAM_DELETE_AFTER = "team.delete.after";
+
+    const PERSON_CREATE = "person.create";
+    const PERSON_CREATE_BEFORE = "person.create.before";
+    const PERSON_CREATE_AFTER = "person.create.after";
+    const PERSON_UPDATE = "person.update";
+    const PERSON_UPDATE_BEFORE = "person.update.before";
+    const PERSON_UPDATE_AFTER = "person.update.after";
+    const PERSON_DELETE = "person.delete";
+    const PERSON_DELETE_BEFORE = "person.delete.before";
+    const PERSON_DELETE_AFTER = "person.delete.after";
+
+    const PERSON_TEAM_LINK_CREATE = "person.team.link.create";
+    const PERSON_TEAM_LINK_CREATE_BEFORE = "person.team.link.create.before";
+    const PERSON_TEAM_LINK_CREATE_AFTER = "person.team.link.create.after";
+    const PERSON_TEAM_LINK_UPDATE = "person.team.link.update";
+    const PERSON_TEAM_LINK_UPDATE_BEFORE = "person.team.link.update.before";
+    const PERSON_TEAM_LINK_UPDATE_AFTER = "person.team.link.update.after";
+    const PERSON_TEAM_LINK_DELETE = "person.team.link.delete";
+    const PERSON_TEAM_LINK_DELETE_BEFORE = "person.team.link.delete.before";
+    const PERSON_TEAM_LINK_DELETE_AFTER = "person.team.link.delete.after";
 }

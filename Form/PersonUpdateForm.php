@@ -15,13 +15,12 @@ namespace Team\Form;
 
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Team\Team;
-use Thelia\Form\BaseForm;
 
 /**
- * Class TeamCreateForm
+ * Class PersonUpdateForm
  * @package Team\Form
  */
-class TeamCreateForm extends BaseForm
+class PersonUpdateForm extends PersonCreateForm
 {
 
     /**
@@ -29,25 +28,20 @@ class TeamCreateForm extends BaseForm
      */
     protected function buildForm()
     {
+        parent::buildForm();
+
         $this->formBuilder
-            ->add("title", "text", array(
-                "label" => $this->translator->trans("Title", [], Team::DOMAIN_NAME),
-                "label_attr" => ["for" => "attr-team-title"],
+            ->add('id', 'integer', array(
+                "label" => $this->translator->trans("Id", [], Team::DOMAIN_NAME),
+                "label_attr" => ["for" => "attr-person-id"],
                 "required" => true,
                 "constraints" => array(new NotBlank(),),
                 "attr" => array()
-            ))
-            ->add("locale", "text", array(
-                "constraints" => array(
-                    new NotBlank(),
-                ),
-                "label_attr" => array("for" => "locale_create"),
-            ))
-        ;
+            ));
     }
 
     public function getName()
     {
-        return "team_create";
+        return "person_update";
     }
 }

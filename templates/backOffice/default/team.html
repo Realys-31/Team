@@ -65,6 +65,14 @@
                             <div class="panel-heading" role="tab" id="heading-{$ID}">
                                 <h4 class="panel-title">
                                     <div class="pull-right">
+
+                                        {loop name="auth-edit" type="auth" role="ADMIN" resource="admin.module" access="CREATE" module="Team"}
+                                            <a class="btn btn-primary btn-xs person-create"
+                                               title="{intl l='Create a Person' d='team.bo.default'}"
+                                               data-target="#person-create" data-toggle="modal" data-id="{$ID}">
+                                                <i class="glyphicon glyphicon-plus-sign"></i>
+                                            </a>
+                                        {/loop}
                                         {loop name="auth-edit" type="auth" role="ADMIN" resource="admin.module" access="UPDATE" module="Team"}
                                             <a class="btn btn-default btn-xs team-update"
                                                title="{intl l='Modify this Team' d='team.bo.default'}"
@@ -91,15 +99,7 @@
                                  role="tabpanel"
                                  aria-labelledby="heading-{$ID}">
                                 <div class="panel-body">
-                                    {ifloop rel="person-list"}
-                                    {loop name="person-list" type="person" tema_id=$ID}
-                                    {/loop}
-                                    {/ifloop}
-                                    {elseloop rel="person-list"}
-                                        <div class="alert alert-info">
-                                            {intl l="There is no Person for this Team" d="team.bo.default"}
-                                        </div>
-                                    {/elseloop}
+                                   {include file="person.html"}
                                 </div>
                             </div>
                         </div>
@@ -114,8 +114,10 @@
         </div>
     </div>
     {include file="modal/team.html"}
+    {include file="modal/person.html"}
 {/block}
 
 {block name="javascript-initialization"}
     {include file="js/team-js.html"}
+    {include file="js/person-js.html"}
 {/block}

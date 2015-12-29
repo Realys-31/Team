@@ -11,43 +11,35 @@
 /*************************************************************************************/
 /*************************************************************************************/
 
-namespace Team\Form;
+namespace Team\Event;
 
-use Symfony\Component\Validator\Constraints\NotBlank;
-use Team\Team;
-use Thelia\Form\BaseForm;
+use Symfony\Component\EventDispatcher\Event;
 
 /**
- * Class TeamCreateForm
- * @package Team\Form
+ * Class PersonTeamLink
+ * @package Team\Event
  */
-class TeamCreateForm extends BaseForm
+class PersonTeamLinkEvent extends Event
 {
+    /**
+     * @var \Team\Model\PersonTeamLink $personTeamLink
+     */
+    protected $personTeamLink;
 
     /**
-     * @inheritDoc
+     * @return \Team\Model\PersonTeamLink
      */
-    protected function buildForm()
+    public function getPersonTeamLink()
     {
-        $this->formBuilder
-            ->add("title", "text", array(
-                "label" => $this->translator->trans("Title", [], Team::DOMAIN_NAME),
-                "label_attr" => ["for" => "attr-team-title"],
-                "required" => true,
-                "constraints" => array(new NotBlank(),),
-                "attr" => array()
-            ))
-            ->add("locale", "text", array(
-                "constraints" => array(
-                    new NotBlank(),
-                ),
-                "label_attr" => array("for" => "locale_create"),
-            ))
-        ;
+        return $this->personTeamLink;
     }
 
-    public function getName()
+    /**
+     * @param \Team\Model\PersonTeamLink $personTeamLink
+     */
+    public function setPersonTeamLink($personTeamLink)
     {
-        return "team_create";
+        $this->personTeamLink = $personTeamLink;
     }
+
 }
