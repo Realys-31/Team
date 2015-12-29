@@ -43,8 +43,7 @@ form_enctype       = {form_enctype form=$form}
 
 {capture "team_delete"}
   {intl l="Do you really want to delete this Team ?" d="team.bo.default"}
-  <input type="hidden" name="team_id" id="team_team_delete_id" value="" />
-  <input type="hidden" name="team_id" value="{$smarty.get.team_id}" />
+  <input type="hidden" name="team_id" id="team_delete_id" value="" />
 {/capture}
 
 {include file="includes/generic-confirm-dialog.html"
