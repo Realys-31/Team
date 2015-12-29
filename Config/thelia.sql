@@ -12,7 +12,6 @@ DROP TABLE IF EXISTS `team`;
 CREATE TABLE `team`
 (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `title` VARCHAR(255),
     `created_at` DATETIME,
     `updated_at` DATETIME,
     `version` INTEGER DEFAULT 0,
@@ -150,6 +149,7 @@ CREATE TABLE `team_i18n`
 (
     `id` INTEGER NOT NULL,
     `locale` VARCHAR(5) DEFAULT 'en_US' NOT NULL,
+    `title` VARCHAR(255),
     `description` LONGTEXT,
     PRIMARY KEY (`id`,`locale`),
     CONSTRAINT `team_i18n_FK_1`
@@ -203,7 +203,6 @@ DROP TABLE IF EXISTS `team_version`;
 CREATE TABLE `team_version`
 (
     `id` INTEGER NOT NULL,
-    `title` VARCHAR(255),
     `created_at` DATETIME,
     `updated_at` DATETIME,
     `version` INTEGER DEFAULT 0 NOT NULL,

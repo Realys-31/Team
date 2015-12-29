@@ -22,7 +22,6 @@ use Team\Model\Map\TeamVersionTableMap;
  *
  *
  * @method     ChildTeamVersionQuery orderById($order = Criteria::ASC) Order by the id column
- * @method     ChildTeamVersionQuery orderByTitle($order = Criteria::ASC) Order by the title column
  * @method     ChildTeamVersionQuery orderByCreatedAt($order = Criteria::ASC) Order by the created_at column
  * @method     ChildTeamVersionQuery orderByUpdatedAt($order = Criteria::ASC) Order by the updated_at column
  * @method     ChildTeamVersionQuery orderByVersion($order = Criteria::ASC) Order by the version column
@@ -32,7 +31,6 @@ use Team\Model\Map\TeamVersionTableMap;
  * @method     ChildTeamVersionQuery orderByPersonTeamLinkVersions($order = Criteria::ASC) Order by the person_team_link_versions column
  *
  * @method     ChildTeamVersionQuery groupById() Group by the id column
- * @method     ChildTeamVersionQuery groupByTitle() Group by the title column
  * @method     ChildTeamVersionQuery groupByCreatedAt() Group by the created_at column
  * @method     ChildTeamVersionQuery groupByUpdatedAt() Group by the updated_at column
  * @method     ChildTeamVersionQuery groupByVersion() Group by the version column
@@ -53,7 +51,6 @@ use Team\Model\Map\TeamVersionTableMap;
  * @method     ChildTeamVersion findOneOrCreate(ConnectionInterface $con = null) Return the first ChildTeamVersion matching the query, or a new ChildTeamVersion object populated from the query conditions when no match is found
  *
  * @method     ChildTeamVersion findOneById(int $id) Return the first ChildTeamVersion filtered by the id column
- * @method     ChildTeamVersion findOneByTitle(string $title) Return the first ChildTeamVersion filtered by the title column
  * @method     ChildTeamVersion findOneByCreatedAt(string $created_at) Return the first ChildTeamVersion filtered by the created_at column
  * @method     ChildTeamVersion findOneByUpdatedAt(string $updated_at) Return the first ChildTeamVersion filtered by the updated_at column
  * @method     ChildTeamVersion findOneByVersion(int $version) Return the first ChildTeamVersion filtered by the version column
@@ -63,7 +60,6 @@ use Team\Model\Map\TeamVersionTableMap;
  * @method     ChildTeamVersion findOneByPersonTeamLinkVersions(array $person_team_link_versions) Return the first ChildTeamVersion filtered by the person_team_link_versions column
  *
  * @method     array findById(int $id) Return ChildTeamVersion objects filtered by the id column
- * @method     array findByTitle(string $title) Return ChildTeamVersion objects filtered by the title column
  * @method     array findByCreatedAt(string $created_at) Return ChildTeamVersion objects filtered by the created_at column
  * @method     array findByUpdatedAt(string $updated_at) Return ChildTeamVersion objects filtered by the updated_at column
  * @method     array findByVersion(int $version) Return ChildTeamVersion objects filtered by the version column
@@ -159,7 +155,7 @@ abstract class TeamVersionQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT ID, TITLE, CREATED_AT, UPDATED_AT, VERSION, VERSION_CREATED_AT, VERSION_CREATED_BY, PERSON_TEAM_LINK_IDS, PERSON_TEAM_LINK_VERSIONS FROM team_version WHERE ID = :p0 AND VERSION = :p1';
+        $sql = 'SELECT ID, CREATED_AT, UPDATED_AT, VERSION, VERSION_CREATED_AT, VERSION_CREATED_BY, PERSON_TEAM_LINK_IDS, PERSON_TEAM_LINK_VERSIONS FROM team_version WHERE ID = :p0 AND VERSION = :p1';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key[0], PDO::PARAM_INT);
@@ -301,35 +297,6 @@ abstract class TeamVersionQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(TeamVersionTableMap::ID, $id, $comparison);
-    }
-
-    /**
-     * Filter the query on the title column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByTitle('fooValue');   // WHERE title = 'fooValue'
-     * $query->filterByTitle('%fooValue%'); // WHERE title LIKE '%fooValue%'
-     * </code>
-     *
-     * @param     string $title The value to use as filter.
-     *              Accepts wildcards (* and % trigger a LIKE)
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return ChildTeamVersionQuery The current query, for fluid interface
-     */
-    public function filterByTitle($title = null, $comparison = null)
-    {
-        if (null === $comparison) {
-            if (is_array($title)) {
-                $comparison = Criteria::IN;
-            } elseif (preg_match('/[\%\*]/', $title)) {
-                $title = str_replace('*', '%', $title);
-                $comparison = Criteria::LIKE;
-            }
-        }
-
-        return $this->addUsingAlias(TeamVersionTableMap::TITLE, $title, $comparison);
     }
 
     /**

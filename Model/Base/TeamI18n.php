@@ -67,6 +67,12 @@ abstract class TeamI18n implements ActiveRecordInterface
     protected $locale;
 
     /**
+     * The value for the title field.
+     * @var        string
+     */
+    protected $title;
+
+    /**
      * The value for the description field.
      * @var        string
      */
@@ -379,6 +385,17 @@ abstract class TeamI18n implements ActiveRecordInterface
     }
 
     /**
+     * Get the [title] column value.
+     *
+     * @return   string
+     */
+    public function getTitle()
+    {
+
+        return $this->title;
+    }
+
+    /**
      * Get the [description] column value.
      *
      * @return   string
@@ -434,6 +451,27 @@ abstract class TeamI18n implements ActiveRecordInterface
 
         return $this;
     } // setLocale()
+
+    /**
+     * Set the value of [title] column.
+     *
+     * @param      string $v new value
+     * @return   \Team\Model\TeamI18n The current object (for fluent API support)
+     */
+    public function setTitle($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->title !== $v) {
+            $this->title = $v;
+            $this->modifiedColumns[TeamI18nTableMap::TITLE] = true;
+        }
+
+
+        return $this;
+    } // setTitle()
 
     /**
      * Set the value of [description] column.
@@ -503,7 +541,10 @@ abstract class TeamI18n implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : TeamI18nTableMap::translateFieldName('Locale', TableMap::TYPE_PHPNAME, $indexType)];
             $this->locale = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : TeamI18nTableMap::translateFieldName('Description', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : TeamI18nTableMap::translateFieldName('Title', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->title = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : TeamI18nTableMap::translateFieldName('Description', TableMap::TYPE_PHPNAME, $indexType)];
             $this->description = (null !== $col) ? (string) $col : null;
             $this->resetModified();
 
@@ -513,7 +554,7 @@ abstract class TeamI18n implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 3; // 3 = TeamI18nTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 4; // 4 = TeamI18nTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating \Team\Model\TeamI18n object", 0, $e);
@@ -740,6 +781,9 @@ abstract class TeamI18n implements ActiveRecordInterface
         if ($this->isColumnModified(TeamI18nTableMap::LOCALE)) {
             $modifiedColumns[':p' . $index++]  = 'LOCALE';
         }
+        if ($this->isColumnModified(TeamI18nTableMap::TITLE)) {
+            $modifiedColumns[':p' . $index++]  = 'TITLE';
+        }
         if ($this->isColumnModified(TeamI18nTableMap::DESCRIPTION)) {
             $modifiedColumns[':p' . $index++]  = 'DESCRIPTION';
         }
@@ -759,6 +803,9 @@ abstract class TeamI18n implements ActiveRecordInterface
                         break;
                     case 'LOCALE':
                         $stmt->bindValue($identifier, $this->locale, PDO::PARAM_STR);
+                        break;
+                    case 'TITLE':
+                        $stmt->bindValue($identifier, $this->title, PDO::PARAM_STR);
                         break;
                     case 'DESCRIPTION':
                         $stmt->bindValue($identifier, $this->description, PDO::PARAM_STR);
@@ -825,6 +872,9 @@ abstract class TeamI18n implements ActiveRecordInterface
                 return $this->getLocale();
                 break;
             case 2:
+                return $this->getTitle();
+                break;
+            case 3:
                 return $this->getDescription();
                 break;
             default:
@@ -858,7 +908,8 @@ abstract class TeamI18n implements ActiveRecordInterface
         $result = array(
             $keys[0] => $this->getId(),
             $keys[1] => $this->getLocale(),
-            $keys[2] => $this->getDescription(),
+            $keys[2] => $this->getTitle(),
+            $keys[3] => $this->getDescription(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -910,6 +961,9 @@ abstract class TeamI18n implements ActiveRecordInterface
                 $this->setLocale($value);
                 break;
             case 2:
+                $this->setTitle($value);
+                break;
+            case 3:
                 $this->setDescription($value);
                 break;
         } // switch()
@@ -938,7 +992,8 @@ abstract class TeamI18n implements ActiveRecordInterface
 
         if (array_key_exists($keys[0], $arr)) $this->setId($arr[$keys[0]]);
         if (array_key_exists($keys[1], $arr)) $this->setLocale($arr[$keys[1]]);
-        if (array_key_exists($keys[2], $arr)) $this->setDescription($arr[$keys[2]]);
+        if (array_key_exists($keys[2], $arr)) $this->setTitle($arr[$keys[2]]);
+        if (array_key_exists($keys[3], $arr)) $this->setDescription($arr[$keys[3]]);
     }
 
     /**
@@ -952,6 +1007,7 @@ abstract class TeamI18n implements ActiveRecordInterface
 
         if ($this->isColumnModified(TeamI18nTableMap::ID)) $criteria->add(TeamI18nTableMap::ID, $this->id);
         if ($this->isColumnModified(TeamI18nTableMap::LOCALE)) $criteria->add(TeamI18nTableMap::LOCALE, $this->locale);
+        if ($this->isColumnModified(TeamI18nTableMap::TITLE)) $criteria->add(TeamI18nTableMap::TITLE, $this->title);
         if ($this->isColumnModified(TeamI18nTableMap::DESCRIPTION)) $criteria->add(TeamI18nTableMap::DESCRIPTION, $this->description);
 
         return $criteria;
@@ -1025,6 +1081,7 @@ abstract class TeamI18n implements ActiveRecordInterface
     {
         $copyObj->setId($this->getId());
         $copyObj->setLocale($this->getLocale());
+        $copyObj->setTitle($this->getTitle());
         $copyObj->setDescription($this->getDescription());
         if ($makeNew) {
             $copyObj->setNew(true);
@@ -1111,6 +1168,7 @@ abstract class TeamI18n implements ActiveRecordInterface
     {
         $this->id = null;
         $this->locale = null;
+        $this->title = null;
         $this->description = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();

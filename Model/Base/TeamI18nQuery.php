@@ -23,10 +23,12 @@ use Team\Model\Map\TeamI18nTableMap;
  *
  * @method     ChildTeamI18nQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     ChildTeamI18nQuery orderByLocale($order = Criteria::ASC) Order by the locale column
+ * @method     ChildTeamI18nQuery orderByTitle($order = Criteria::ASC) Order by the title column
  * @method     ChildTeamI18nQuery orderByDescription($order = Criteria::ASC) Order by the description column
  *
  * @method     ChildTeamI18nQuery groupById() Group by the id column
  * @method     ChildTeamI18nQuery groupByLocale() Group by the locale column
+ * @method     ChildTeamI18nQuery groupByTitle() Group by the title column
  * @method     ChildTeamI18nQuery groupByDescription() Group by the description column
  *
  * @method     ChildTeamI18nQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
@@ -42,10 +44,12 @@ use Team\Model\Map\TeamI18nTableMap;
  *
  * @method     ChildTeamI18n findOneById(int $id) Return the first ChildTeamI18n filtered by the id column
  * @method     ChildTeamI18n findOneByLocale(string $locale) Return the first ChildTeamI18n filtered by the locale column
+ * @method     ChildTeamI18n findOneByTitle(string $title) Return the first ChildTeamI18n filtered by the title column
  * @method     ChildTeamI18n findOneByDescription(string $description) Return the first ChildTeamI18n filtered by the description column
  *
  * @method     array findById(int $id) Return ChildTeamI18n objects filtered by the id column
  * @method     array findByLocale(string $locale) Return ChildTeamI18n objects filtered by the locale column
+ * @method     array findByTitle(string $title) Return ChildTeamI18n objects filtered by the title column
  * @method     array findByDescription(string $description) Return ChildTeamI18n objects filtered by the description column
  *
  */
@@ -135,7 +139,7 @@ abstract class TeamI18nQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT ID, LOCALE, DESCRIPTION FROM team_i18n WHERE ID = :p0 AND LOCALE = :p1';
+        $sql = 'SELECT ID, LOCALE, TITLE, DESCRIPTION FROM team_i18n WHERE ID = :p0 AND LOCALE = :p1';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key[0], PDO::PARAM_INT);
@@ -306,6 +310,35 @@ abstract class TeamI18nQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(TeamI18nTableMap::LOCALE, $locale, $comparison);
+    }
+
+    /**
+     * Filter the query on the title column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByTitle('fooValue');   // WHERE title = 'fooValue'
+     * $query->filterByTitle('%fooValue%'); // WHERE title LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $title The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildTeamI18nQuery The current query, for fluid interface
+     */
+    public function filterByTitle($title = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($title)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $title)) {
+                $title = str_replace('*', '%', $title);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(TeamI18nTableMap::TITLE, $title, $comparison);
     }
 
     /**

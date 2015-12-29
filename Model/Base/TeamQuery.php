@@ -23,7 +23,6 @@ use Team\Model\Map\TeamTableMap;
  *
  *
  * @method     ChildTeamQuery orderById($order = Criteria::ASC) Order by the id column
- * @method     ChildTeamQuery orderByTitle($order = Criteria::ASC) Order by the title column
  * @method     ChildTeamQuery orderByCreatedAt($order = Criteria::ASC) Order by the created_at column
  * @method     ChildTeamQuery orderByUpdatedAt($order = Criteria::ASC) Order by the updated_at column
  * @method     ChildTeamQuery orderByVersion($order = Criteria::ASC) Order by the version column
@@ -31,7 +30,6 @@ use Team\Model\Map\TeamTableMap;
  * @method     ChildTeamQuery orderByVersionCreatedBy($order = Criteria::ASC) Order by the version_created_by column
  *
  * @method     ChildTeamQuery groupById() Group by the id column
- * @method     ChildTeamQuery groupByTitle() Group by the title column
  * @method     ChildTeamQuery groupByCreatedAt() Group by the created_at column
  * @method     ChildTeamQuery groupByUpdatedAt() Group by the updated_at column
  * @method     ChildTeamQuery groupByVersion() Group by the version column
@@ -58,7 +56,6 @@ use Team\Model\Map\TeamTableMap;
  * @method     ChildTeam findOneOrCreate(ConnectionInterface $con = null) Return the first ChildTeam matching the query, or a new ChildTeam object populated from the query conditions when no match is found
  *
  * @method     ChildTeam findOneById(int $id) Return the first ChildTeam filtered by the id column
- * @method     ChildTeam findOneByTitle(string $title) Return the first ChildTeam filtered by the title column
  * @method     ChildTeam findOneByCreatedAt(string $created_at) Return the first ChildTeam filtered by the created_at column
  * @method     ChildTeam findOneByUpdatedAt(string $updated_at) Return the first ChildTeam filtered by the updated_at column
  * @method     ChildTeam findOneByVersion(int $version) Return the first ChildTeam filtered by the version column
@@ -66,7 +63,6 @@ use Team\Model\Map\TeamTableMap;
  * @method     ChildTeam findOneByVersionCreatedBy(string $version_created_by) Return the first ChildTeam filtered by the version_created_by column
  *
  * @method     array findById(int $id) Return ChildTeam objects filtered by the id column
- * @method     array findByTitle(string $title) Return ChildTeam objects filtered by the title column
  * @method     array findByCreatedAt(string $created_at) Return ChildTeam objects filtered by the created_at column
  * @method     array findByUpdatedAt(string $updated_at) Return ChildTeam objects filtered by the updated_at column
  * @method     array findByVersion(int $version) Return ChildTeam objects filtered by the version column
@@ -167,7 +163,7 @@ abstract class TeamQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT ID, TITLE, CREATED_AT, UPDATED_AT, VERSION, VERSION_CREATED_AT, VERSION_CREATED_BY FROM team WHERE ID = :p0';
+        $sql = 'SELECT ID, CREATED_AT, UPDATED_AT, VERSION, VERSION_CREATED_AT, VERSION_CREATED_BY FROM team WHERE ID = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -295,35 +291,6 @@ abstract class TeamQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(TeamTableMap::ID, $id, $comparison);
-    }
-
-    /**
-     * Filter the query on the title column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByTitle('fooValue');   // WHERE title = 'fooValue'
-     * $query->filterByTitle('%fooValue%'); // WHERE title LIKE '%fooValue%'
-     * </code>
-     *
-     * @param     string $title The value to use as filter.
-     *              Accepts wildcards (* and % trigger a LIKE)
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return ChildTeamQuery The current query, for fluid interface
-     */
-    public function filterByTitle($title = null, $comparison = null)
-    {
-        if (null === $comparison) {
-            if (is_array($title)) {
-                $comparison = Criteria::IN;
-            } elseif (preg_match('/[\%\*]/', $title)) {
-                $title = str_replace('*', '%', $title);
-                $comparison = Criteria::LIKE;
-            }
-        }
-
-        return $this->addUsingAlias(TeamTableMap::TITLE, $title, $comparison);
     }
 
     /**

@@ -62,12 +62,6 @@ abstract class TeamVersion implements ActiveRecordInterface
     protected $id;
 
     /**
-     * The value for the title field.
-     * @var        string
-     */
-    protected $title;
-
-    /**
      * The value for the created_at field.
      * @var        string
      */
@@ -420,17 +414,6 @@ abstract class TeamVersion implements ActiveRecordInterface
     }
 
     /**
-     * Get the [title] column value.
-     *
-     * @return   string
-     */
-    public function getTitle()
-    {
-
-        return $this->title;
-    }
-
-    /**
      * Get the [optionally formatted] temporal [created_at] column value.
      *
      *
@@ -594,27 +577,6 @@ abstract class TeamVersion implements ActiveRecordInterface
 
         return $this;
     } // setId()
-
-    /**
-     * Set the value of [title] column.
-     *
-     * @param      string $v new value
-     * @return   \Team\Model\TeamVersion The current object (for fluent API support)
-     */
-    public function setTitle($v)
-    {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->title !== $v) {
-            $this->title = $v;
-            $this->modifiedColumns[TeamVersionTableMap::TITLE] = true;
-        }
-
-
-        return $this;
-    } // setTitle()
 
     /**
      * Sets the value of [created_at] column to a normalized version of the date/time value specified.
@@ -869,38 +831,35 @@ abstract class TeamVersion implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : TeamVersionTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
             $this->id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : TeamVersionTableMap::translateFieldName('Title', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->title = (null !== $col) ? (string) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : TeamVersionTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : TeamVersionTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, '\DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : TeamVersionTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : TeamVersionTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->updated_at = (null !== $col) ? PropelDateTime::newInstance($col, null, '\DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : TeamVersionTableMap::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : TeamVersionTableMap::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)];
             $this->version = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : TeamVersionTableMap::translateFieldName('VersionCreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : TeamVersionTableMap::translateFieldName('VersionCreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->version_created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, '\DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : TeamVersionTableMap::translateFieldName('VersionCreatedBy', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : TeamVersionTableMap::translateFieldName('VersionCreatedBy', TableMap::TYPE_PHPNAME, $indexType)];
             $this->version_created_by = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : TeamVersionTableMap::translateFieldName('PersonTeamLinkIds', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : TeamVersionTableMap::translateFieldName('PersonTeamLinkIds', TableMap::TYPE_PHPNAME, $indexType)];
             $this->person_team_link_ids = $col;
             $this->person_team_link_ids_unserialized = null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : TeamVersionTableMap::translateFieldName('PersonTeamLinkVersions', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : TeamVersionTableMap::translateFieldName('PersonTeamLinkVersions', TableMap::TYPE_PHPNAME, $indexType)];
             $this->person_team_link_versions = $col;
             $this->person_team_link_versions_unserialized = null;
             $this->resetModified();
@@ -911,7 +870,7 @@ abstract class TeamVersion implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 9; // 9 = TeamVersionTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 8; // 8 = TeamVersionTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating \Team\Model\TeamVersion object", 0, $e);
@@ -1135,9 +1094,6 @@ abstract class TeamVersion implements ActiveRecordInterface
         if ($this->isColumnModified(TeamVersionTableMap::ID)) {
             $modifiedColumns[':p' . $index++]  = 'ID';
         }
-        if ($this->isColumnModified(TeamVersionTableMap::TITLE)) {
-            $modifiedColumns[':p' . $index++]  = 'TITLE';
-        }
         if ($this->isColumnModified(TeamVersionTableMap::CREATED_AT)) {
             $modifiedColumns[':p' . $index++]  = 'CREATED_AT';
         }
@@ -1172,9 +1128,6 @@ abstract class TeamVersion implements ActiveRecordInterface
                 switch ($columnName) {
                     case 'ID':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
-                        break;
-                    case 'TITLE':
-                        $stmt->bindValue($identifier, $this->title, PDO::PARAM_STR);
                         break;
                     case 'CREATED_AT':
                         $stmt->bindValue($identifier, $this->created_at ? $this->created_at->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
@@ -1256,27 +1209,24 @@ abstract class TeamVersion implements ActiveRecordInterface
                 return $this->getId();
                 break;
             case 1:
-                return $this->getTitle();
-                break;
-            case 2:
                 return $this->getCreatedAt();
                 break;
-            case 3:
+            case 2:
                 return $this->getUpdatedAt();
                 break;
-            case 4:
+            case 3:
                 return $this->getVersion();
                 break;
-            case 5:
+            case 4:
                 return $this->getVersionCreatedAt();
                 break;
-            case 6:
+            case 5:
                 return $this->getVersionCreatedBy();
                 break;
-            case 7:
+            case 6:
                 return $this->getPersonTeamLinkIds();
                 break;
-            case 8:
+            case 7:
                 return $this->getPersonTeamLinkVersions();
                 break;
             default:
@@ -1309,14 +1259,13 @@ abstract class TeamVersion implements ActiveRecordInterface
         $keys = TeamVersionTableMap::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getId(),
-            $keys[1] => $this->getTitle(),
-            $keys[2] => $this->getCreatedAt(),
-            $keys[3] => $this->getUpdatedAt(),
-            $keys[4] => $this->getVersion(),
-            $keys[5] => $this->getVersionCreatedAt(),
-            $keys[6] => $this->getVersionCreatedBy(),
-            $keys[7] => $this->getPersonTeamLinkIds(),
-            $keys[8] => $this->getPersonTeamLinkVersions(),
+            $keys[1] => $this->getCreatedAt(),
+            $keys[2] => $this->getUpdatedAt(),
+            $keys[3] => $this->getVersion(),
+            $keys[4] => $this->getVersionCreatedAt(),
+            $keys[5] => $this->getVersionCreatedBy(),
+            $keys[6] => $this->getPersonTeamLinkIds(),
+            $keys[7] => $this->getPersonTeamLinkVersions(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1365,31 +1314,28 @@ abstract class TeamVersion implements ActiveRecordInterface
                 $this->setId($value);
                 break;
             case 1:
-                $this->setTitle($value);
-                break;
-            case 2:
                 $this->setCreatedAt($value);
                 break;
-            case 3:
+            case 2:
                 $this->setUpdatedAt($value);
                 break;
-            case 4:
+            case 3:
                 $this->setVersion($value);
                 break;
-            case 5:
+            case 4:
                 $this->setVersionCreatedAt($value);
                 break;
-            case 6:
+            case 5:
                 $this->setVersionCreatedBy($value);
                 break;
-            case 7:
+            case 6:
                 if (!is_array($value)) {
                     $v = trim(substr($value, 2, -2));
                     $value = $v ? explode(' | ', $v) : array();
                 }
                 $this->setPersonTeamLinkIds($value);
                 break;
-            case 8:
+            case 7:
                 if (!is_array($value)) {
                     $v = trim(substr($value, 2, -2));
                     $value = $v ? explode(' | ', $v) : array();
@@ -1421,14 +1367,13 @@ abstract class TeamVersion implements ActiveRecordInterface
         $keys = TeamVersionTableMap::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) $this->setId($arr[$keys[0]]);
-        if (array_key_exists($keys[1], $arr)) $this->setTitle($arr[$keys[1]]);
-        if (array_key_exists($keys[2], $arr)) $this->setCreatedAt($arr[$keys[2]]);
-        if (array_key_exists($keys[3], $arr)) $this->setUpdatedAt($arr[$keys[3]]);
-        if (array_key_exists($keys[4], $arr)) $this->setVersion($arr[$keys[4]]);
-        if (array_key_exists($keys[5], $arr)) $this->setVersionCreatedAt($arr[$keys[5]]);
-        if (array_key_exists($keys[6], $arr)) $this->setVersionCreatedBy($arr[$keys[6]]);
-        if (array_key_exists($keys[7], $arr)) $this->setPersonTeamLinkIds($arr[$keys[7]]);
-        if (array_key_exists($keys[8], $arr)) $this->setPersonTeamLinkVersions($arr[$keys[8]]);
+        if (array_key_exists($keys[1], $arr)) $this->setCreatedAt($arr[$keys[1]]);
+        if (array_key_exists($keys[2], $arr)) $this->setUpdatedAt($arr[$keys[2]]);
+        if (array_key_exists($keys[3], $arr)) $this->setVersion($arr[$keys[3]]);
+        if (array_key_exists($keys[4], $arr)) $this->setVersionCreatedAt($arr[$keys[4]]);
+        if (array_key_exists($keys[5], $arr)) $this->setVersionCreatedBy($arr[$keys[5]]);
+        if (array_key_exists($keys[6], $arr)) $this->setPersonTeamLinkIds($arr[$keys[6]]);
+        if (array_key_exists($keys[7], $arr)) $this->setPersonTeamLinkVersions($arr[$keys[7]]);
     }
 
     /**
@@ -1441,7 +1386,6 @@ abstract class TeamVersion implements ActiveRecordInterface
         $criteria = new Criteria(TeamVersionTableMap::DATABASE_NAME);
 
         if ($this->isColumnModified(TeamVersionTableMap::ID)) $criteria->add(TeamVersionTableMap::ID, $this->id);
-        if ($this->isColumnModified(TeamVersionTableMap::TITLE)) $criteria->add(TeamVersionTableMap::TITLE, $this->title);
         if ($this->isColumnModified(TeamVersionTableMap::CREATED_AT)) $criteria->add(TeamVersionTableMap::CREATED_AT, $this->created_at);
         if ($this->isColumnModified(TeamVersionTableMap::UPDATED_AT)) $criteria->add(TeamVersionTableMap::UPDATED_AT, $this->updated_at);
         if ($this->isColumnModified(TeamVersionTableMap::VERSION)) $criteria->add(TeamVersionTableMap::VERSION, $this->version);
@@ -1520,7 +1464,6 @@ abstract class TeamVersion implements ActiveRecordInterface
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
         $copyObj->setId($this->getId());
-        $copyObj->setTitle($this->getTitle());
         $copyObj->setCreatedAt($this->getCreatedAt());
         $copyObj->setUpdatedAt($this->getUpdatedAt());
         $copyObj->setVersion($this->getVersion());
@@ -1612,7 +1555,6 @@ abstract class TeamVersion implements ActiveRecordInterface
     public function clear()
     {
         $this->id = null;
-        $this->title = null;
         $this->created_at = null;
         $this->updated_at = null;
         $this->version = null;

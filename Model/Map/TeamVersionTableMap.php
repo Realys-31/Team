@@ -58,7 +58,7 @@ class TeamVersionTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 9;
+    const NUM_COLUMNS = 8;
 
     /**
      * The number of lazy-loaded columns
@@ -68,17 +68,12 @@ class TeamVersionTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 9;
+    const NUM_HYDRATE_COLUMNS = 8;
 
     /**
      * the column name for the ID field
      */
     const ID = 'team_version.ID';
-
-    /**
-     * the column name for the TITLE field
-     */
-    const TITLE = 'team_version.TITLE';
 
     /**
      * the column name for the CREATED_AT field
@@ -127,12 +122,12 @@ class TeamVersionTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'Title', 'CreatedAt', 'UpdatedAt', 'Version', 'VersionCreatedAt', 'VersionCreatedBy', 'PersonTeamLinkIds', 'PersonTeamLinkVersions', ),
-        self::TYPE_STUDLYPHPNAME => array('id', 'title', 'createdAt', 'updatedAt', 'version', 'versionCreatedAt', 'versionCreatedBy', 'personTeamLinkIds', 'personTeamLinkVersions', ),
-        self::TYPE_COLNAME       => array(TeamVersionTableMap::ID, TeamVersionTableMap::TITLE, TeamVersionTableMap::CREATED_AT, TeamVersionTableMap::UPDATED_AT, TeamVersionTableMap::VERSION, TeamVersionTableMap::VERSION_CREATED_AT, TeamVersionTableMap::VERSION_CREATED_BY, TeamVersionTableMap::PERSON_TEAM_LINK_IDS, TeamVersionTableMap::PERSON_TEAM_LINK_VERSIONS, ),
-        self::TYPE_RAW_COLNAME   => array('ID', 'TITLE', 'CREATED_AT', 'UPDATED_AT', 'VERSION', 'VERSION_CREATED_AT', 'VERSION_CREATED_BY', 'PERSON_TEAM_LINK_IDS', 'PERSON_TEAM_LINK_VERSIONS', ),
-        self::TYPE_FIELDNAME     => array('id', 'title', 'created_at', 'updated_at', 'version', 'version_created_at', 'version_created_by', 'person_team_link_ids', 'person_team_link_versions', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, )
+        self::TYPE_PHPNAME       => array('Id', 'CreatedAt', 'UpdatedAt', 'Version', 'VersionCreatedAt', 'VersionCreatedBy', 'PersonTeamLinkIds', 'PersonTeamLinkVersions', ),
+        self::TYPE_STUDLYPHPNAME => array('id', 'createdAt', 'updatedAt', 'version', 'versionCreatedAt', 'versionCreatedBy', 'personTeamLinkIds', 'personTeamLinkVersions', ),
+        self::TYPE_COLNAME       => array(TeamVersionTableMap::ID, TeamVersionTableMap::CREATED_AT, TeamVersionTableMap::UPDATED_AT, TeamVersionTableMap::VERSION, TeamVersionTableMap::VERSION_CREATED_AT, TeamVersionTableMap::VERSION_CREATED_BY, TeamVersionTableMap::PERSON_TEAM_LINK_IDS, TeamVersionTableMap::PERSON_TEAM_LINK_VERSIONS, ),
+        self::TYPE_RAW_COLNAME   => array('ID', 'CREATED_AT', 'UPDATED_AT', 'VERSION', 'VERSION_CREATED_AT', 'VERSION_CREATED_BY', 'PERSON_TEAM_LINK_IDS', 'PERSON_TEAM_LINK_VERSIONS', ),
+        self::TYPE_FIELDNAME     => array('id', 'created_at', 'updated_at', 'version', 'version_created_at', 'version_created_by', 'person_team_link_ids', 'person_team_link_versions', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, )
     );
 
     /**
@@ -142,12 +137,12 @@ class TeamVersionTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'Title' => 1, 'CreatedAt' => 2, 'UpdatedAt' => 3, 'Version' => 4, 'VersionCreatedAt' => 5, 'VersionCreatedBy' => 6, 'PersonTeamLinkIds' => 7, 'PersonTeamLinkVersions' => 8, ),
-        self::TYPE_STUDLYPHPNAME => array('id' => 0, 'title' => 1, 'createdAt' => 2, 'updatedAt' => 3, 'version' => 4, 'versionCreatedAt' => 5, 'versionCreatedBy' => 6, 'personTeamLinkIds' => 7, 'personTeamLinkVersions' => 8, ),
-        self::TYPE_COLNAME       => array(TeamVersionTableMap::ID => 0, TeamVersionTableMap::TITLE => 1, TeamVersionTableMap::CREATED_AT => 2, TeamVersionTableMap::UPDATED_AT => 3, TeamVersionTableMap::VERSION => 4, TeamVersionTableMap::VERSION_CREATED_AT => 5, TeamVersionTableMap::VERSION_CREATED_BY => 6, TeamVersionTableMap::PERSON_TEAM_LINK_IDS => 7, TeamVersionTableMap::PERSON_TEAM_LINK_VERSIONS => 8, ),
-        self::TYPE_RAW_COLNAME   => array('ID' => 0, 'TITLE' => 1, 'CREATED_AT' => 2, 'UPDATED_AT' => 3, 'VERSION' => 4, 'VERSION_CREATED_AT' => 5, 'VERSION_CREATED_BY' => 6, 'PERSON_TEAM_LINK_IDS' => 7, 'PERSON_TEAM_LINK_VERSIONS' => 8, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'title' => 1, 'created_at' => 2, 'updated_at' => 3, 'version' => 4, 'version_created_at' => 5, 'version_created_by' => 6, 'person_team_link_ids' => 7, 'person_team_link_versions' => 8, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'CreatedAt' => 1, 'UpdatedAt' => 2, 'Version' => 3, 'VersionCreatedAt' => 4, 'VersionCreatedBy' => 5, 'PersonTeamLinkIds' => 6, 'PersonTeamLinkVersions' => 7, ),
+        self::TYPE_STUDLYPHPNAME => array('id' => 0, 'createdAt' => 1, 'updatedAt' => 2, 'version' => 3, 'versionCreatedAt' => 4, 'versionCreatedBy' => 5, 'personTeamLinkIds' => 6, 'personTeamLinkVersions' => 7, ),
+        self::TYPE_COLNAME       => array(TeamVersionTableMap::ID => 0, TeamVersionTableMap::CREATED_AT => 1, TeamVersionTableMap::UPDATED_AT => 2, TeamVersionTableMap::VERSION => 3, TeamVersionTableMap::VERSION_CREATED_AT => 4, TeamVersionTableMap::VERSION_CREATED_BY => 5, TeamVersionTableMap::PERSON_TEAM_LINK_IDS => 6, TeamVersionTableMap::PERSON_TEAM_LINK_VERSIONS => 7, ),
+        self::TYPE_RAW_COLNAME   => array('ID' => 0, 'CREATED_AT' => 1, 'UPDATED_AT' => 2, 'VERSION' => 3, 'VERSION_CREATED_AT' => 4, 'VERSION_CREATED_BY' => 5, 'PERSON_TEAM_LINK_IDS' => 6, 'PERSON_TEAM_LINK_VERSIONS' => 7, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'created_at' => 1, 'updated_at' => 2, 'version' => 3, 'version_created_at' => 4, 'version_created_by' => 5, 'person_team_link_ids' => 6, 'person_team_link_versions' => 7, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, )
     );
 
     /**
@@ -167,7 +162,6 @@ class TeamVersionTableMap extends TableMap
         $this->setUseIdGenerator(false);
         // columns
         $this->addForeignPrimaryKey('ID', 'Id', 'INTEGER' , 'team', 'ID', true, null, null);
-        $this->addColumn('TITLE', 'Title', 'VARCHAR', false, 255, null);
         $this->addColumn('CREATED_AT', 'CreatedAt', 'TIMESTAMP', false, null, null);
         $this->addColumn('UPDATED_AT', 'UpdatedAt', 'TIMESTAMP', false, null, null);
         $this->addPrimaryKey('VERSION', 'Version', 'INTEGER', true, null, 0);
@@ -252,11 +246,11 @@ class TeamVersionTableMap extends TableMap
     public static function getPrimaryKeyHashFromRow($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
         // If the PK cannot be derived from the row, return NULL.
-        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] === null && $row[TableMap::TYPE_NUM == $indexType ? 4 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)] === null) {
+        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] === null && $row[TableMap::TYPE_NUM == $indexType ? 3 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)] === null) {
             return null;
         }
 
-        return serialize(array((string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)], (string) $row[TableMap::TYPE_NUM == $indexType ? 4 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)]));
+        return serialize(array((string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)], (string) $row[TableMap::TYPE_NUM == $indexType ? 3 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)]));
     }
 
     /**
@@ -373,7 +367,6 @@ class TeamVersionTableMap extends TableMap
     {
         if (null === $alias) {
             $criteria->addSelectColumn(TeamVersionTableMap::ID);
-            $criteria->addSelectColumn(TeamVersionTableMap::TITLE);
             $criteria->addSelectColumn(TeamVersionTableMap::CREATED_AT);
             $criteria->addSelectColumn(TeamVersionTableMap::UPDATED_AT);
             $criteria->addSelectColumn(TeamVersionTableMap::VERSION);
@@ -383,7 +376,6 @@ class TeamVersionTableMap extends TableMap
             $criteria->addSelectColumn(TeamVersionTableMap::PERSON_TEAM_LINK_VERSIONS);
         } else {
             $criteria->addSelectColumn($alias . '.ID');
-            $criteria->addSelectColumn($alias . '.TITLE');
             $criteria->addSelectColumn($alias . '.CREATED_AT');
             $criteria->addSelectColumn($alias . '.UPDATED_AT');
             $criteria->addSelectColumn($alias . '.VERSION');
