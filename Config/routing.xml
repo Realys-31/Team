@@ -5,8 +5,17 @@
         xsi:schemaLocation="http://symfony.com/schema/routing http://symfony.com/schema/routing/routing-1.0.xsd">
 
     <!-- TEAM -->
-    <route id="team.list" path="/admin/module/Team/team" methods="get">
-        <default key="_controller">Team:Team:list</default>
+    <route id="team.team.list" path="/admin/module/Team/team" methods="get">
+        <default key="_controller">Team:Team:default</default>
+    </route>
+    <route id="team.team.create" path="/admin/module/Team/team" methods="post">
+        <default key="_controller">Team:Team:create</default>
+    </route>
+    <route id="team.team.edit" path="/admin/module/Team/team/edit" methods="post">
+        <default key="_controller">Team:Team:processUpdate</default>
+    </route>
+    <route id="team.team.delete" path="/admin/module/Team/team/delete" methods="post">
+        <default key="_controller">Team:Team:delete</default>
     </route>
 
 </routes>

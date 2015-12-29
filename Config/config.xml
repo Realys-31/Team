@@ -5,15 +5,15 @@
         xsi:schemaLocation="http://thelia.net/schema/dic/config http://thelia.net/schema/dic/config/thelia-1.0.xsd">
 
     <loops>
-        <loop name="team" class="Team\Loop\TeamLoop" />
+        <loop name="team" class="Team\Loop\TeamLoop"/>
     </loops>
 
     <forms>
         <!--
         <form name="MyFormName" class="Team\Form\MySuperForm" />
         -->
-        <form name="team.create" class="Team\Form\TeamCreateForm" />
-        <form name="team.update" class="Team\Form\TeamUpdateForm" />
+        <form name="team.create" class="Team\Form\TeamCreateForm"/>
+        <form name="team.update" class="Team\Form\TeamUpdateForm"/>
     </forms>
 
     <commands>
@@ -22,15 +22,16 @@
         -->
     </commands>
 
-    <!--
     <services>
-
+        <service id="team_service" class="Team\Service\TeamService">
+            <call method="setDispatcher">
+                <argument type="service" id="event_dispatcher"/>
+            </call>
+        </service>
     </services>
-    -->
-
 
     <hooks>
-         <hook id="team.admin.hook" class="Team\Hook\AdminInterfaceHook" scope="request">
+        <hook id="team.admin.hook" class="Team\Hook\AdminInterfaceHook" scope="request">
             <tag name="hook.event_listener" event="main.top-menu-modules" type="back" method="onMenuModule"/>
             <argument type="service" id="router.team"/>
         </hook>

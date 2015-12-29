@@ -13,16 +13,73 @@
 
 namespace Team\Controller;
 
-use Thelia\Controller\Admin\BaseAdminController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Team\Controller\Base\BaseController;
+use Team\Model\Team;
+use Thelia\Tools\URL;
 
 /**
  * Class TeamController
  * @package Team\Controller
  */
-class TeamController extends BaseAdminController
+class TeamController extends BaseController
 {
-    public function listAction()
+    const CONTROLLER_ENTITY_NAME = "team";
+
+    /**
+     * @inheritDoc
+     */
+    protected function getListRenderTemplate()
     {
         return $this->render("team");
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function redirectToListTemplate()
+    {
+        return new RedirectResponse(URL::getInstance()->absoluteUrl("/admin/module/Team/team"));
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getEditRenderTemplate()
+    {
+        // TODO: Implement getEditRenderTemplate() method.
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getCreateRenderTemplate()
+    {
+        // TODO: Implement getCreateRenderTemplate() method.
+    }
+
+    /**
+     * @inheritDoc
+     * @var Team $object
+     */
+    protected function getObjectId($object)
+    {
+        return $object->getId();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getExistingObject()
+    {
+        // TODO: Implement getExistingObject() method.
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function hydrateObjectForm($object)
+    {
+        // TODO: Implement hydrateObjectForm() method.
     }
 }

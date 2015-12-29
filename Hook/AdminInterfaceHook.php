@@ -43,7 +43,7 @@ class AdminInterfaceHook extends BaseHook
 
     public function onMenuModule(HookRenderBlockEvent $event)
     {
-        $url = $this->router->generate("team.list");
+        $url = $this->router->generate("team.team.list");
         $lang = $this->getSession()->getLang();
         $title = $this->transQuick("Team", $lang->getLocale());
 
