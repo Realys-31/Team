@@ -91,7 +91,15 @@
                                  role="tabpanel"
                                  aria-labelledby="heading-{$ID}">
                                 <div class="panel-body">
-
+                                    {ifloop rel="person-list"}
+                                    {loop name="person-list" type="person" tema_id=$ID}
+                                    {/loop}
+                                    {/ifloop}
+                                    {elseloop rel="person-list"}
+                                        <div class="alert alert-info">
+                                            {intl l="There is no Person for this Team" d="team.bo.default"}
+                                        </div>
+                                    {/elseloop}
                                 </div>
                             </div>
                         </div>

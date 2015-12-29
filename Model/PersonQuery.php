@@ -2,7 +2,11 @@
 
 namespace Team\Model;
 
+use Propel\Runtime\ActiveQuery\Criteria;
+use Propel\Runtime\ActiveQuery\Join;
 use Team\Model\Base\PersonQuery as BasePersonQuery;
+use Team\Model\Map\PersonTableMap;
+use Team\Model\Map\PersonTeamLinkTableMap;
 
 
 /**
@@ -17,5 +21,21 @@ use Team\Model\Base\PersonQuery as BasePersonQuery;
  */
 class PersonQuery extends BasePersonQuery
 {
+    /**
+     * @param $id
+     * @return $this
+     */
+    public function filterByTeamId($id)
+    {
+        if (is_array($id)) {
+            $id = implode(",", $id);
+        }
 
+        $teamJoin = new Join(PersonTableMap::ID, PersonTeamLinkTableMap::PERSON_ID, Criteria::LEFT_JOIN);
+        $this
+            ->addJoinObject($teamJoin, "teamJoin")
+            ->where(PersonTeamLinkTableMap::TEAM_ID . " " . Criteria::IN . " (" . $id . ")");
+
+        return $this;
+    }
 } // PersonQuery

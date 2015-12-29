@@ -6,21 +6,13 @@
 
     <loops>
         <loop name="team" class="Team\Loop\TeamLoop"/>
+        <loop name="person" class="Team\Loop\PersonLoop"/>
     </loops>
 
     <forms>
-        <!--
-        <form name="MyFormName" class="Team\Form\MySuperForm" />
-        -->
         <form name="team.create" class="Team\Form\TeamCreateForm"/>
         <form name="team.update" class="Team\Form\TeamUpdateForm"/>
     </forms>
-
-    <commands>
-        <!--
-        <command class="Team\Command\MySuperCommand" />
-        -->
-    </commands>
 
     <services>
         <service id="team_service" class="Team\Service\TeamService">
@@ -37,16 +29,4 @@
         </hook>
     </hooks>
 
-
-    <!--
-    <exports>
-
-    </exports>
-    -->
-
-    <!--
-    <imports>
-
-    </imports>
-    -->
 </config>
