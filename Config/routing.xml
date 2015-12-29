@@ -11,7 +11,7 @@
     <route id="team.team.create" path="/admin/module/Team/team" methods="post">
         <default key="_controller">Team:Team:create</default>
     </route>
-    <route id="team.team.edit" path="/admin/module/Team/team/edit" methods="post">
+    <route id="team.team.edit" path="/admin/module/Team/team/update" methods="post">
         <default key="_controller">Team:Team:processUpdate</default>
     </route>
     <route id="team.team.delete" path="/admin/module/Team/team/delete" methods="post">

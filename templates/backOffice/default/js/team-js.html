@@ -1,8 +1,14 @@
 <script>
 
-    $(function() {
-        $('a.team-delete').click(function(ev) {
+    $(function () {
+        $('a.team-delete').click(function (ev) {
             $('#team_delete_id').val($(this).data('id'));
+        });
+
+        $('a.team-update').click(function (ev) {
+            var $this = $(this);
+            $('#attr-team-id',"#team-update").val($this.data('id'));
+            $('#attr-team-title',"#team-update").val($this.data('title'));
         });
     });
 </script>

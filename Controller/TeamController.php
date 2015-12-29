@@ -47,7 +47,7 @@ class TeamController extends BaseController
      */
     protected function getEditRenderTemplate()
     {
-        // TODO: Implement getEditRenderTemplate() method.
+        return $this->render("team");
     }
 
     /**
@@ -55,7 +55,7 @@ class TeamController extends BaseController
      */
     protected function getCreateRenderTemplate()
     {
-        // TODO: Implement getCreateRenderTemplate() method.
+        return $this->render("team");
     }
 
     /**
@@ -72,7 +72,7 @@ class TeamController extends BaseController
      */
     protected function getExistingObject()
     {
-        // TODO: Implement getExistingObject() method.
+       return null;
     }
 
     /**
@@ -80,6 +80,10 @@ class TeamController extends BaseController
      */
     protected function hydrateObjectForm($object)
     {
-        // TODO: Implement hydrateObjectForm() method.
+        return null;
+    }
+
+    protected function redirectToEditionTemplate($request){
+        return new RedirectResponse(URL::getInstance()->absoluteUrl("/admin/module/Team/team"));
     }
 }
