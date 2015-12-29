@@ -28,13 +28,14 @@
     </services>
     -->
 
-    <!--
+
     <hooks>
-        <hook id="team.hook" class="Team\Hook\MySuperHook" scope="request">
-            <tag name="hook.event_listener" event="main.body.bottom" type="front|back|pdf|email" method="onMainBodyBottom" />
+         <hook id="team.admin.hook" class="Team\Hook\AdminInterfaceHook" scope="request">
+            <tag name="hook.event_listener" event="main.top-menu-modules" type="back" method="onMenuModule"/>
+            <argument type="service" id="router.team"/>
         </hook>
     </hooks>
-    -->
+
 
     <!--
     <exports>

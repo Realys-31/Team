@@ -1,0 +1,30 @@
+{extends file="admin-layout.tpl"}
+{default_translation_domain domain='team.bo.default'}
+
+{block name="no-return-functions"}
+  {$admin_current_location = 'tools'}
+{/block}
+
+{block name="page-title"}{intl l='Team' d='team.bo.default'}{/block}
+
+{block name="check-resource"}admin.module{/block}
+{block name="check-access"}view{/block}
+{block name="check-module"}Team{/block}
+
+{block name="main-content"}
+  <div id="wrapper" class="container">
+
+    {if $general_error}
+      <div class="alert alert-danger">
+        {$general_error}
+      </div>
+    {/if}
+
+    <!-- Team list -->
+    <div class="general-block-decorator">
+      <div class="table-responsive">
+
+      </div>
+    </div>
+  </div>
+{/block}
