@@ -1,6 +1,6 @@
 {ifloop rel="person-list"}
     <div class="row">
-        {loop name="person-list" type="person"}
+        {loop name="person-list" type="person" force_return=true team_id=$ID}
             {include file="includes/single-person.html"}
         {/loop}
     </div>
