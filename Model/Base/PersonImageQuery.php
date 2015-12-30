@@ -13,6 +13,7 @@ use Propel\Runtime\Collection\ObjectCollection;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\PropelException;
 use Team\Model\PersonImage as ChildPersonImage;
+use Team\Model\PersonImageI18nQuery as ChildPersonImageI18nQuery;
 use Team\Model\PersonImageQuery as ChildPersonImageQuery;
 use Team\Model\Map\PersonImageTableMap;
 
@@ -24,6 +25,8 @@ use Team\Model\Map\PersonImageTableMap;
  * @method     ChildPersonImageQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     ChildPersonImageQuery orderByFile($order = Criteria::ASC) Order by the file column
  * @method     ChildPersonImageQuery orderByPersonId($order = Criteria::ASC) Order by the person_id column
+ * @method     ChildPersonImageQuery orderByVisible($order = Criteria::ASC) Order by the visible column
+ * @method     ChildPersonImageQuery orderByPosition($order = Criteria::ASC) Order by the position column
  * @method     ChildPersonImageQuery orderByCreatedAt($order = Criteria::ASC) Order by the created_at column
  * @method     ChildPersonImageQuery orderByUpdatedAt($order = Criteria::ASC) Order by the updated_at column
  * @method     ChildPersonImageQuery orderByVersion($order = Criteria::ASC) Order by the version column
@@ -33,6 +36,8 @@ use Team\Model\Map\PersonImageTableMap;
  * @method     ChildPersonImageQuery groupById() Group by the id column
  * @method     ChildPersonImageQuery groupByFile() Group by the file column
  * @method     ChildPersonImageQuery groupByPersonId() Group by the person_id column
+ * @method     ChildPersonImageQuery groupByVisible() Group by the visible column
+ * @method     ChildPersonImageQuery groupByPosition() Group by the position column
  * @method     ChildPersonImageQuery groupByCreatedAt() Group by the created_at column
  * @method     ChildPersonImageQuery groupByUpdatedAt() Group by the updated_at column
  * @method     ChildPersonImageQuery groupByVersion() Group by the version column
@@ -47,6 +52,10 @@ use Team\Model\Map\PersonImageTableMap;
  * @method     ChildPersonImageQuery rightJoinPerson($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Person relation
  * @method     ChildPersonImageQuery innerJoinPerson($relationAlias = null) Adds a INNER JOIN clause to the query using the Person relation
  *
+ * @method     ChildPersonImageQuery leftJoinPersonImageI18n($relationAlias = null) Adds a LEFT JOIN clause to the query using the PersonImageI18n relation
+ * @method     ChildPersonImageQuery rightJoinPersonImageI18n($relationAlias = null) Adds a RIGHT JOIN clause to the query using the PersonImageI18n relation
+ * @method     ChildPersonImageQuery innerJoinPersonImageI18n($relationAlias = null) Adds a INNER JOIN clause to the query using the PersonImageI18n relation
+ *
  * @method     ChildPersonImageQuery leftJoinPersonImageVersion($relationAlias = null) Adds a LEFT JOIN clause to the query using the PersonImageVersion relation
  * @method     ChildPersonImageQuery rightJoinPersonImageVersion($relationAlias = null) Adds a RIGHT JOIN clause to the query using the PersonImageVersion relation
  * @method     ChildPersonImageQuery innerJoinPersonImageVersion($relationAlias = null) Adds a INNER JOIN clause to the query using the PersonImageVersion relation
@@ -57,6 +66,8 @@ use Team\Model\Map\PersonImageTableMap;
  * @method     ChildPersonImage findOneById(int $id) Return the first ChildPersonImage filtered by the id column
  * @method     ChildPersonImage findOneByFile(string $file) Return the first ChildPersonImage filtered by the file column
  * @method     ChildPersonImage findOneByPersonId(int $person_id) Return the first ChildPersonImage filtered by the person_id column
+ * @method     ChildPersonImage findOneByVisible(int $visible) Return the first ChildPersonImage filtered by the visible column
+ * @method     ChildPersonImage findOneByPosition(int $position) Return the first ChildPersonImage filtered by the position column
  * @method     ChildPersonImage findOneByCreatedAt(string $created_at) Return the first ChildPersonImage filtered by the created_at column
  * @method     ChildPersonImage findOneByUpdatedAt(string $updated_at) Return the first ChildPersonImage filtered by the updated_at column
  * @method     ChildPersonImage findOneByVersion(int $version) Return the first ChildPersonImage filtered by the version column
@@ -66,6 +77,8 @@ use Team\Model\Map\PersonImageTableMap;
  * @method     array findById(int $id) Return ChildPersonImage objects filtered by the id column
  * @method     array findByFile(string $file) Return ChildPersonImage objects filtered by the file column
  * @method     array findByPersonId(int $person_id) Return ChildPersonImage objects filtered by the person_id column
+ * @method     array findByVisible(int $visible) Return ChildPersonImage objects filtered by the visible column
+ * @method     array findByPosition(int $position) Return ChildPersonImage objects filtered by the position column
  * @method     array findByCreatedAt(string $created_at) Return ChildPersonImage objects filtered by the created_at column
  * @method     array findByUpdatedAt(string $updated_at) Return ChildPersonImage objects filtered by the updated_at column
  * @method     array findByVersion(int $version) Return ChildPersonImage objects filtered by the version column
@@ -166,7 +179,7 @@ abstract class PersonImageQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT ID, FILE, PERSON_ID, CREATED_AT, UPDATED_AT, VERSION, VERSION_CREATED_AT, VERSION_CREATED_BY FROM person_image WHERE ID = :p0';
+        $sql = 'SELECT ID, FILE, PERSON_ID, VISIBLE, POSITION, CREATED_AT, UPDATED_AT, VERSION, VERSION_CREATED_AT, VERSION_CREATED_BY FROM person_image WHERE ID = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -366,6 +379,88 @@ abstract class PersonImageQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(PersonImageTableMap::PERSON_ID, $personId, $comparison);
+    }
+
+    /**
+     * Filter the query on the visible column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByVisible(1234); // WHERE visible = 1234
+     * $query->filterByVisible(array(12, 34)); // WHERE visible IN (12, 34)
+     * $query->filterByVisible(array('min' => 12)); // WHERE visible > 12
+     * </code>
+     *
+     * @param     mixed $visible The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildPersonImageQuery The current query, for fluid interface
+     */
+    public function filterByVisible($visible = null, $comparison = null)
+    {
+        if (is_array($visible)) {
+            $useMinMax = false;
+            if (isset($visible['min'])) {
+                $this->addUsingAlias(PersonImageTableMap::VISIBLE, $visible['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($visible['max'])) {
+                $this->addUsingAlias(PersonImageTableMap::VISIBLE, $visible['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(PersonImageTableMap::VISIBLE, $visible, $comparison);
+    }
+
+    /**
+     * Filter the query on the position column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByPosition(1234); // WHERE position = 1234
+     * $query->filterByPosition(array(12, 34)); // WHERE position IN (12, 34)
+     * $query->filterByPosition(array('min' => 12)); // WHERE position > 12
+     * </code>
+     *
+     * @param     mixed $position The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildPersonImageQuery The current query, for fluid interface
+     */
+    public function filterByPosition($position = null, $comparison = null)
+    {
+        if (is_array($position)) {
+            $useMinMax = false;
+            if (isset($position['min'])) {
+                $this->addUsingAlias(PersonImageTableMap::POSITION, $position['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($position['max'])) {
+                $this->addUsingAlias(PersonImageTableMap::POSITION, $position['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(PersonImageTableMap::POSITION, $position, $comparison);
     }
 
     /**
@@ -643,6 +738,79 @@ abstract class PersonImageQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query by a related \Team\Model\PersonImageI18n object
+     *
+     * @param \Team\Model\PersonImageI18n|ObjectCollection $personImageI18n  the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildPersonImageQuery The current query, for fluid interface
+     */
+    public function filterByPersonImageI18n($personImageI18n, $comparison = null)
+    {
+        if ($personImageI18n instanceof \Team\Model\PersonImageI18n) {
+            return $this
+                ->addUsingAlias(PersonImageTableMap::ID, $personImageI18n->getId(), $comparison);
+        } elseif ($personImageI18n instanceof ObjectCollection) {
+            return $this
+                ->usePersonImageI18nQuery()
+                ->filterByPrimaryKeys($personImageI18n->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByPersonImageI18n() only accepts arguments of type \Team\Model\PersonImageI18n or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the PersonImageI18n relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return ChildPersonImageQuery The current query, for fluid interface
+     */
+    public function joinPersonImageI18n($relationAlias = null, $joinType = 'LEFT JOIN')
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('PersonImageI18n');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'PersonImageI18n');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the PersonImageI18n relation PersonImageI18n object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   \Team\Model\PersonImageI18nQuery A secondary query class using the current class as primary query
+     */
+    public function usePersonImageI18nQuery($relationAlias = null, $joinType = 'LEFT JOIN')
+    {
+        return $this
+            ->joinPersonImageI18n($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'PersonImageI18n', '\Team\Model\PersonImageI18nQuery');
+    }
+
+    /**
      * Filter the query by a related \Team\Model\PersonImageVersion object
      *
      * @param \Team\Model\PersonImageVersion|ObjectCollection $personImageVersion  the related object to use as filter
@@ -870,6 +1038,63 @@ abstract class PersonImageQuery extends ModelCriteria
     public function firstCreatedFirst()
     {
         return $this->addAscendingOrderByColumn(PersonImageTableMap::CREATED_AT);
+    }
+
+    // i18n behavior
+
+    /**
+     * Adds a JOIN clause to the query using the i18n relation
+     *
+     * @param     string $locale Locale to use for the join condition, e.g. 'fr_FR'
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'. Defaults to left join.
+     *
+     * @return    ChildPersonImageQuery The current query, for fluid interface
+     */
+    public function joinI18n($locale = 'en_US', $relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $relationName = $relationAlias ? $relationAlias : 'PersonImageI18n';
+
+        return $this
+            ->joinPersonImageI18n($relationAlias, $joinType)
+            ->addJoinCondition($relationName, $relationName . '.Locale = ?', $locale);
+    }
+
+    /**
+     * Adds a JOIN clause to the query and hydrates the related I18n object.
+     * Shortcut for $c->joinI18n($locale)->with()
+     *
+     * @param     string $locale Locale to use for the join condition, e.g. 'fr_FR'
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'. Defaults to left join.
+     *
+     * @return    ChildPersonImageQuery The current query, for fluid interface
+     */
+    public function joinWithI18n($locale = 'en_US', $joinType = Criteria::LEFT_JOIN)
+    {
+        $this
+            ->joinI18n($locale, null, $joinType)
+            ->with('PersonImageI18n');
+        $this->with['PersonImageI18n']->setIsWithOneToMany(false);
+
+        return $this;
+    }
+
+    /**
+     * Use the I18n relation query object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $locale Locale to use for the join condition, e.g. 'fr_FR'
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'. Defaults to left join.
+     *
+     * @return    ChildPersonImageI18nQuery A secondary query class using the current class as primary query
+     */
+    public function useI18nQuery($locale = 'en_US', $relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinI18n($locale, $relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'PersonImageI18n', '\Team\Model\PersonImageI18nQuery');
     }
 
     // versionable behavior

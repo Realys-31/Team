@@ -58,12 +58,29 @@
         <column autoIncrement="true" name="id" primaryKey="true" required="true" type="INTEGER"/>
         <column name="file" size="255" type="VARCHAR"/>
         <column name="person_id" required="true" type="INTEGER"/>
+        <column name="visible" type="TINYINT" />
+        <column name="position" type="INTEGER" />
+        <column name="title" size="255" type="VARCHAR" />
+        <column name="description" type="CLOB" />
+        <column name="chapo" type="LONGVARCHAR" />
+        <column name="postscriptum" type="LONGVARCHAR" />
 
         <foreign-key foreignTable="person" name="fk_person_image_person_id" onDelete="CASCADE">
             <reference foreign="id" local="person_id"/>
         </foreign-key>
 
+        <index name="idx_person_image_person_id">
+            <index-column name="person_id" />
+        </index>
+        <index name="idx_person_image_person_id_position">
+            <index-column name="person_id" />
+            <index-column name="position" />
+        </index>
+
         <behavior name="timestampable"/>
+        <behavior name="i18n">
+            <parameter name="i18n_columns" value="title, description, chapo, postscriptum" />
+        </behavior>
         <behavior name="versionable">
             <parameter name="log_created_at" value="true"/>
             <parameter name="log_created_by" value="true"/>

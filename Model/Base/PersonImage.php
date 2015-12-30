@@ -19,6 +19,8 @@ use Propel\Runtime\Parser\AbstractParser;
 use Propel\Runtime\Util\PropelDateTime;
 use Team\Model\Person as ChildPerson;
 use Team\Model\PersonImage as ChildPersonImage;
+use Team\Model\PersonImageI18n as ChildPersonImageI18n;
+use Team\Model\PersonImageI18nQuery as ChildPersonImageI18nQuery;
 use Team\Model\PersonImageQuery as ChildPersonImageQuery;
 use Team\Model\PersonImageVersion as ChildPersonImageVersion;
 use Team\Model\PersonImageVersionQuery as ChildPersonImageVersionQuery;
@@ -80,6 +82,18 @@ abstract class PersonImage implements ActiveRecordInterface
     protected $person_id;
 
     /**
+     * The value for the visible field.
+     * @var        int
+     */
+    protected $visible;
+
+    /**
+     * The value for the position field.
+     * @var        int
+     */
+    protected $position;
+
+    /**
      * The value for the created_at field.
      * @var        string
      */
@@ -116,6 +130,12 @@ abstract class PersonImage implements ActiveRecordInterface
     protected $aPerson;
 
     /**
+     * @var        ObjectCollection|ChildPersonImageI18n[] Collection to store aggregation of ChildPersonImageI18n objects.
+     */
+    protected $collPersonImageI18ns;
+    protected $collPersonImageI18nsPartial;
+
+    /**
      * @var        ObjectCollection|ChildPersonImageVersion[] Collection to store aggregation of ChildPersonImageVersion objects.
      */
     protected $collPersonImageVersions;
@@ -129,6 +149,20 @@ abstract class PersonImage implements ActiveRecordInterface
      */
     protected $alreadyInSave = false;
 
+    // i18n behavior
+
+    /**
+     * Current locale
+     * @var        string
+     */
+    protected $currentLocale = 'en_US';
+
+    /**
+     * Current translation objects
+     * @var        array[ChildPersonImageI18n]
+     */
+    protected $currentTranslations;
+
     // versionable behavior
 
 
@@ -136,6 +170,12 @@ abstract class PersonImage implements ActiveRecordInterface
      * @var bool
      */
     protected $enforceVersion = false;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection
+     */
+    protected $personImageI18nsScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
@@ -448,6 +488,28 @@ abstract class PersonImage implements ActiveRecordInterface
     }
 
     /**
+     * Get the [visible] column value.
+     *
+     * @return   int
+     */
+    public function getVisible()
+    {
+
+        return $this->visible;
+    }
+
+    /**
+     * Get the [position] column value.
+     *
+     * @return   int
+     */
+    public function getPosition()
+    {
+
+        return $this->position;
+    }
+
+    /**
      * Get the [optionally formatted] temporal [created_at] column value.
      *
      *
@@ -595,6 +657,48 @@ abstract class PersonImage implements ActiveRecordInterface
 
         return $this;
     } // setPersonId()
+
+    /**
+     * Set the value of [visible] column.
+     *
+     * @param      int $v new value
+     * @return   \Team\Model\PersonImage The current object (for fluent API support)
+     */
+    public function setVisible($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->visible !== $v) {
+            $this->visible = $v;
+            $this->modifiedColumns[PersonImageTableMap::VISIBLE] = true;
+        }
+
+
+        return $this;
+    } // setVisible()
+
+    /**
+     * Set the value of [position] column.
+     *
+     * @param      int $v new value
+     * @return   \Team\Model\PersonImage The current object (for fluent API support)
+     */
+    public function setPosition($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->position !== $v) {
+            $this->position = $v;
+            $this->modifiedColumns[PersonImageTableMap::POSITION] = true;
+        }
+
+
+        return $this;
+    } // setPosition()
 
     /**
      * Sets the value of [created_at] column to a normalized version of the date/time value specified.
@@ -751,28 +855,34 @@ abstract class PersonImage implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : PersonImageTableMap::translateFieldName('PersonId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->person_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : PersonImageTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : PersonImageTableMap::translateFieldName('Visible', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->visible = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : PersonImageTableMap::translateFieldName('Position', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->position = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : PersonImageTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, '\DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : PersonImageTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : PersonImageTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->updated_at = (null !== $col) ? PropelDateTime::newInstance($col, null, '\DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : PersonImageTableMap::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : PersonImageTableMap::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)];
             $this->version = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : PersonImageTableMap::translateFieldName('VersionCreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : PersonImageTableMap::translateFieldName('VersionCreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->version_created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, '\DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : PersonImageTableMap::translateFieldName('VersionCreatedBy', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : PersonImageTableMap::translateFieldName('VersionCreatedBy', TableMap::TYPE_PHPNAME, $indexType)];
             $this->version_created_by = (null !== $col) ? (string) $col : null;
             $this->resetModified();
 
@@ -782,7 +892,7 @@ abstract class PersonImage implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 8; // 8 = PersonImageTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 10; // 10 = PersonImageTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating \Team\Model\PersonImage object", 0, $e);
@@ -847,6 +957,8 @@ abstract class PersonImage implements ActiveRecordInterface
         if ($deep) {  // also de-associate any related objects?
 
             $this->aPerson = null;
+            $this->collPersonImageI18ns = null;
+
             $this->collPersonImageVersions = null;
 
         } // if (deep)
@@ -1006,6 +1118,23 @@ abstract class PersonImage implements ActiveRecordInterface
                 $this->resetModified();
             }
 
+            if ($this->personImageI18nsScheduledForDeletion !== null) {
+                if (!$this->personImageI18nsScheduledForDeletion->isEmpty()) {
+                    \Team\Model\PersonImageI18nQuery::create()
+                        ->filterByPrimaryKeys($this->personImageI18nsScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->personImageI18nsScheduledForDeletion = null;
+                }
+            }
+
+                if ($this->collPersonImageI18ns !== null) {
+            foreach ($this->collPersonImageI18ns as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
             if ($this->personImageVersionsScheduledForDeletion !== null) {
                 if (!$this->personImageVersionsScheduledForDeletion->isEmpty()) {
                     \Team\Model\PersonImageVersionQuery::create()
@@ -1058,6 +1187,12 @@ abstract class PersonImage implements ActiveRecordInterface
         if ($this->isColumnModified(PersonImageTableMap::PERSON_ID)) {
             $modifiedColumns[':p' . $index++]  = 'PERSON_ID';
         }
+        if ($this->isColumnModified(PersonImageTableMap::VISIBLE)) {
+            $modifiedColumns[':p' . $index++]  = 'VISIBLE';
+        }
+        if ($this->isColumnModified(PersonImageTableMap::POSITION)) {
+            $modifiedColumns[':p' . $index++]  = 'POSITION';
+        }
         if ($this->isColumnModified(PersonImageTableMap::CREATED_AT)) {
             $modifiedColumns[':p' . $index++]  = 'CREATED_AT';
         }
@@ -1092,6 +1227,12 @@ abstract class PersonImage implements ActiveRecordInterface
                         break;
                     case 'PERSON_ID':
                         $stmt->bindValue($identifier, $this->person_id, PDO::PARAM_INT);
+                        break;
+                    case 'VISIBLE':
+                        $stmt->bindValue($identifier, $this->visible, PDO::PARAM_INT);
+                        break;
+                    case 'POSITION':
+                        $stmt->bindValue($identifier, $this->position, PDO::PARAM_INT);
                         break;
                     case 'CREATED_AT':
                         $stmt->bindValue($identifier, $this->created_at ? $this->created_at->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
@@ -1180,18 +1321,24 @@ abstract class PersonImage implements ActiveRecordInterface
                 return $this->getPersonId();
                 break;
             case 3:
-                return $this->getCreatedAt();
+                return $this->getVisible();
                 break;
             case 4:
-                return $this->getUpdatedAt();
+                return $this->getPosition();
                 break;
             case 5:
-                return $this->getVersion();
+                return $this->getCreatedAt();
                 break;
             case 6:
-                return $this->getVersionCreatedAt();
+                return $this->getUpdatedAt();
                 break;
             case 7:
+                return $this->getVersion();
+                break;
+            case 8:
+                return $this->getVersionCreatedAt();
+                break;
+            case 9:
                 return $this->getVersionCreatedBy();
                 break;
             default:
@@ -1226,11 +1373,13 @@ abstract class PersonImage implements ActiveRecordInterface
             $keys[0] => $this->getId(),
             $keys[1] => $this->getFile(),
             $keys[2] => $this->getPersonId(),
-            $keys[3] => $this->getCreatedAt(),
-            $keys[4] => $this->getUpdatedAt(),
-            $keys[5] => $this->getVersion(),
-            $keys[6] => $this->getVersionCreatedAt(),
-            $keys[7] => $this->getVersionCreatedBy(),
+            $keys[3] => $this->getVisible(),
+            $keys[4] => $this->getPosition(),
+            $keys[5] => $this->getCreatedAt(),
+            $keys[6] => $this->getUpdatedAt(),
+            $keys[7] => $this->getVersion(),
+            $keys[8] => $this->getVersionCreatedAt(),
+            $keys[9] => $this->getVersionCreatedBy(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1240,6 +1389,9 @@ abstract class PersonImage implements ActiveRecordInterface
         if ($includeForeignObjects) {
             if (null !== $this->aPerson) {
                 $result['Person'] = $this->aPerson->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->collPersonImageI18ns) {
+                $result['PersonImageI18ns'] = $this->collPersonImageI18ns->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
             if (null !== $this->collPersonImageVersions) {
                 $result['PersonImageVersions'] = $this->collPersonImageVersions->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
@@ -1288,18 +1440,24 @@ abstract class PersonImage implements ActiveRecordInterface
                 $this->setPersonId($value);
                 break;
             case 3:
-                $this->setCreatedAt($value);
+                $this->setVisible($value);
                 break;
             case 4:
-                $this->setUpdatedAt($value);
+                $this->setPosition($value);
                 break;
             case 5:
-                $this->setVersion($value);
+                $this->setCreatedAt($value);
                 break;
             case 6:
-                $this->setVersionCreatedAt($value);
+                $this->setUpdatedAt($value);
                 break;
             case 7:
+                $this->setVersion($value);
+                break;
+            case 8:
+                $this->setVersionCreatedAt($value);
+                break;
+            case 9:
                 $this->setVersionCreatedBy($value);
                 break;
         } // switch()
@@ -1329,11 +1487,13 @@ abstract class PersonImage implements ActiveRecordInterface
         if (array_key_exists($keys[0], $arr)) $this->setId($arr[$keys[0]]);
         if (array_key_exists($keys[1], $arr)) $this->setFile($arr[$keys[1]]);
         if (array_key_exists($keys[2], $arr)) $this->setPersonId($arr[$keys[2]]);
-        if (array_key_exists($keys[3], $arr)) $this->setCreatedAt($arr[$keys[3]]);
-        if (array_key_exists($keys[4], $arr)) $this->setUpdatedAt($arr[$keys[4]]);
-        if (array_key_exists($keys[5], $arr)) $this->setVersion($arr[$keys[5]]);
-        if (array_key_exists($keys[6], $arr)) $this->setVersionCreatedAt($arr[$keys[6]]);
-        if (array_key_exists($keys[7], $arr)) $this->setVersionCreatedBy($arr[$keys[7]]);
+        if (array_key_exists($keys[3], $arr)) $this->setVisible($arr[$keys[3]]);
+        if (array_key_exists($keys[4], $arr)) $this->setPosition($arr[$keys[4]]);
+        if (array_key_exists($keys[5], $arr)) $this->setCreatedAt($arr[$keys[5]]);
+        if (array_key_exists($keys[6], $arr)) $this->setUpdatedAt($arr[$keys[6]]);
+        if (array_key_exists($keys[7], $arr)) $this->setVersion($arr[$keys[7]]);
+        if (array_key_exists($keys[8], $arr)) $this->setVersionCreatedAt($arr[$keys[8]]);
+        if (array_key_exists($keys[9], $arr)) $this->setVersionCreatedBy($arr[$keys[9]]);
     }
 
     /**
@@ -1348,6 +1508,8 @@ abstract class PersonImage implements ActiveRecordInterface
         if ($this->isColumnModified(PersonImageTableMap::ID)) $criteria->add(PersonImageTableMap::ID, $this->id);
         if ($this->isColumnModified(PersonImageTableMap::FILE)) $criteria->add(PersonImageTableMap::FILE, $this->file);
         if ($this->isColumnModified(PersonImageTableMap::PERSON_ID)) $criteria->add(PersonImageTableMap::PERSON_ID, $this->person_id);
+        if ($this->isColumnModified(PersonImageTableMap::VISIBLE)) $criteria->add(PersonImageTableMap::VISIBLE, $this->visible);
+        if ($this->isColumnModified(PersonImageTableMap::POSITION)) $criteria->add(PersonImageTableMap::POSITION, $this->position);
         if ($this->isColumnModified(PersonImageTableMap::CREATED_AT)) $criteria->add(PersonImageTableMap::CREATED_AT, $this->created_at);
         if ($this->isColumnModified(PersonImageTableMap::UPDATED_AT)) $criteria->add(PersonImageTableMap::UPDATED_AT, $this->updated_at);
         if ($this->isColumnModified(PersonImageTableMap::VERSION)) $criteria->add(PersonImageTableMap::VERSION, $this->version);
@@ -1418,6 +1580,8 @@ abstract class PersonImage implements ActiveRecordInterface
     {
         $copyObj->setFile($this->getFile());
         $copyObj->setPersonId($this->getPersonId());
+        $copyObj->setVisible($this->getVisible());
+        $copyObj->setPosition($this->getPosition());
         $copyObj->setCreatedAt($this->getCreatedAt());
         $copyObj->setUpdatedAt($this->getUpdatedAt());
         $copyObj->setVersion($this->getVersion());
@@ -1428,6 +1592,12 @@ abstract class PersonImage implements ActiveRecordInterface
             // important: temporarily setNew(false) because this affects the behavior of
             // the getter/setter methods for fkey referrer objects.
             $copyObj->setNew(false);
+
+            foreach ($this->getPersonImageI18ns() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addPersonImageI18n($relObj->copy($deepCopy));
+                }
+            }
 
             foreach ($this->getPersonImageVersions() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
@@ -1527,9 +1697,237 @@ abstract class PersonImage implements ActiveRecordInterface
      */
     public function initRelation($relationName)
     {
+        if ('PersonImageI18n' == $relationName) {
+            return $this->initPersonImageI18ns();
+        }
         if ('PersonImageVersion' == $relationName) {
             return $this->initPersonImageVersions();
         }
+    }
+
+    /**
+     * Clears out the collPersonImageI18ns collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addPersonImageI18ns()
+     */
+    public function clearPersonImageI18ns()
+    {
+        $this->collPersonImageI18ns = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collPersonImageI18ns collection loaded partially.
+     */
+    public function resetPartialPersonImageI18ns($v = true)
+    {
+        $this->collPersonImageI18nsPartial = $v;
+    }
+
+    /**
+     * Initializes the collPersonImageI18ns collection.
+     *
+     * By default this just sets the collPersonImageI18ns collection to an empty array (like clearcollPersonImageI18ns());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initPersonImageI18ns($overrideExisting = true)
+    {
+        if (null !== $this->collPersonImageI18ns && !$overrideExisting) {
+            return;
+        }
+        $this->collPersonImageI18ns = new ObjectCollection();
+        $this->collPersonImageI18ns->setModel('\Team\Model\PersonImageI18n');
+    }
+
+    /**
+     * Gets an array of ChildPersonImageI18n objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildPersonImage is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return Collection|ChildPersonImageI18n[] List of ChildPersonImageI18n objects
+     * @throws PropelException
+     */
+    public function getPersonImageI18ns($criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collPersonImageI18nsPartial && !$this->isNew();
+        if (null === $this->collPersonImageI18ns || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collPersonImageI18ns) {
+                // return empty collection
+                $this->initPersonImageI18ns();
+            } else {
+                $collPersonImageI18ns = ChildPersonImageI18nQuery::create(null, $criteria)
+                    ->filterByPersonImage($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collPersonImageI18nsPartial && count($collPersonImageI18ns)) {
+                        $this->initPersonImageI18ns(false);
+
+                        foreach ($collPersonImageI18ns as $obj) {
+                            if (false == $this->collPersonImageI18ns->contains($obj)) {
+                                $this->collPersonImageI18ns->append($obj);
+                            }
+                        }
+
+                        $this->collPersonImageI18nsPartial = true;
+                    }
+
+                    reset($collPersonImageI18ns);
+
+                    return $collPersonImageI18ns;
+                }
+
+                if ($partial && $this->collPersonImageI18ns) {
+                    foreach ($this->collPersonImageI18ns as $obj) {
+                        if ($obj->isNew()) {
+                            $collPersonImageI18ns[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collPersonImageI18ns = $collPersonImageI18ns;
+                $this->collPersonImageI18nsPartial = false;
+            }
+        }
+
+        return $this->collPersonImageI18ns;
+    }
+
+    /**
+     * Sets a collection of PersonImageI18n objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $personImageI18ns A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return   ChildPersonImage The current object (for fluent API support)
+     */
+    public function setPersonImageI18ns(Collection $personImageI18ns, ConnectionInterface $con = null)
+    {
+        $personImageI18nsToDelete = $this->getPersonImageI18ns(new Criteria(), $con)->diff($personImageI18ns);
+
+
+        //since at least one column in the foreign key is at the same time a PK
+        //we can not just set a PK to NULL in the lines below. We have to store
+        //a backup of all values, so we are able to manipulate these items based on the onDelete value later.
+        $this->personImageI18nsScheduledForDeletion = clone $personImageI18nsToDelete;
+
+        foreach ($personImageI18nsToDelete as $personImageI18nRemoved) {
+            $personImageI18nRemoved->setPersonImage(null);
+        }
+
+        $this->collPersonImageI18ns = null;
+        foreach ($personImageI18ns as $personImageI18n) {
+            $this->addPersonImageI18n($personImageI18n);
+        }
+
+        $this->collPersonImageI18ns = $personImageI18ns;
+        $this->collPersonImageI18nsPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related PersonImageI18n objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related PersonImageI18n objects.
+     * @throws PropelException
+     */
+    public function countPersonImageI18ns(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collPersonImageI18nsPartial && !$this->isNew();
+        if (null === $this->collPersonImageI18ns || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collPersonImageI18ns) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getPersonImageI18ns());
+            }
+
+            $query = ChildPersonImageI18nQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByPersonImage($this)
+                ->count($con);
+        }
+
+        return count($this->collPersonImageI18ns);
+    }
+
+    /**
+     * Method called to associate a ChildPersonImageI18n object to this object
+     * through the ChildPersonImageI18n foreign key attribute.
+     *
+     * @param    ChildPersonImageI18n $l ChildPersonImageI18n
+     * @return   \Team\Model\PersonImage The current object (for fluent API support)
+     */
+    public function addPersonImageI18n(ChildPersonImageI18n $l)
+    {
+        if ($l && $locale = $l->getLocale()) {
+            $this->setLocale($locale);
+            $this->currentTranslations[$locale] = $l;
+        }
+        if ($this->collPersonImageI18ns === null) {
+            $this->initPersonImageI18ns();
+            $this->collPersonImageI18nsPartial = true;
+        }
+
+        if (!in_array($l, $this->collPersonImageI18ns->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
+            $this->doAddPersonImageI18n($l);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param PersonImageI18n $personImageI18n The personImageI18n object to add.
+     */
+    protected function doAddPersonImageI18n($personImageI18n)
+    {
+        $this->collPersonImageI18ns[]= $personImageI18n;
+        $personImageI18n->setPersonImage($this);
+    }
+
+    /**
+     * @param  PersonImageI18n $personImageI18n The personImageI18n object to remove.
+     * @return ChildPersonImage The current object (for fluent API support)
+     */
+    public function removePersonImageI18n($personImageI18n)
+    {
+        if ($this->getPersonImageI18ns()->contains($personImageI18n)) {
+            $this->collPersonImageI18ns->remove($this->collPersonImageI18ns->search($personImageI18n));
+            if (null === $this->personImageI18nsScheduledForDeletion) {
+                $this->personImageI18nsScheduledForDeletion = clone $this->collPersonImageI18ns;
+                $this->personImageI18nsScheduledForDeletion->clear();
+            }
+            $this->personImageI18nsScheduledForDeletion[]= clone $personImageI18n;
+            $personImageI18n->setPersonImage(null);
+        }
+
+        return $this;
     }
 
     /**
@@ -1761,6 +2159,8 @@ abstract class PersonImage implements ActiveRecordInterface
         $this->id = null;
         $this->file = null;
         $this->person_id = null;
+        $this->visible = null;
+        $this->position = null;
         $this->created_at = null;
         $this->updated_at = null;
         $this->version = null;
@@ -1786,6 +2186,11 @@ abstract class PersonImage implements ActiveRecordInterface
     public function clearAllReferences($deep = false)
     {
         if ($deep) {
+            if ($this->collPersonImageI18ns) {
+                foreach ($this->collPersonImageI18ns as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
             if ($this->collPersonImageVersions) {
                 foreach ($this->collPersonImageVersions as $o) {
                     $o->clearAllReferences($deep);
@@ -1793,6 +2198,11 @@ abstract class PersonImage implements ActiveRecordInterface
             }
         } // if ($deep)
 
+        // i18n behavior
+        $this->currentLocale = 'en_US';
+        $this->currentTranslations = null;
+
+        $this->collPersonImageI18ns = null;
         $this->collPersonImageVersions = null;
         $this->aPerson = null;
     }
@@ -1817,6 +2227,201 @@ abstract class PersonImage implements ActiveRecordInterface
     public function keepUpdateDateUnchanged()
     {
         $this->modifiedColumns[PersonImageTableMap::UPDATED_AT] = true;
+
+        return $this;
+    }
+
+    // i18n behavior
+
+    /**
+     * Sets the locale for translations
+     *
+     * @param     string $locale Locale to use for the translation, e.g. 'fr_FR'
+     *
+     * @return    ChildPersonImage The current object (for fluent API support)
+     */
+    public function setLocale($locale = 'en_US')
+    {
+        $this->currentLocale = $locale;
+
+        return $this;
+    }
+
+    /**
+     * Gets the locale for translations
+     *
+     * @return    string $locale Locale to use for the translation, e.g. 'fr_FR'
+     */
+    public function getLocale()
+    {
+        return $this->currentLocale;
+    }
+
+    /**
+     * Returns the current translation for a given locale
+     *
+     * @param     string $locale Locale to use for the translation, e.g. 'fr_FR'
+     * @param     ConnectionInterface $con an optional connection object
+     *
+     * @return ChildPersonImageI18n */
+    public function getTranslation($locale = 'en_US', ConnectionInterface $con = null)
+    {
+        if (!isset($this->currentTranslations[$locale])) {
+            if (null !== $this->collPersonImageI18ns) {
+                foreach ($this->collPersonImageI18ns as $translation) {
+                    if ($translation->getLocale() == $locale) {
+                        $this->currentTranslations[$locale] = $translation;
+
+                        return $translation;
+                    }
+                }
+            }
+            if ($this->isNew()) {
+                $translation = new ChildPersonImageI18n();
+                $translation->setLocale($locale);
+            } else {
+                $translation = ChildPersonImageI18nQuery::create()
+                    ->filterByPrimaryKey(array($this->getPrimaryKey(), $locale))
+                    ->findOneOrCreate($con);
+                $this->currentTranslations[$locale] = $translation;
+            }
+            $this->addPersonImageI18n($translation);
+        }
+
+        return $this->currentTranslations[$locale];
+    }
+
+    /**
+     * Remove the translation for a given locale
+     *
+     * @param     string $locale Locale to use for the translation, e.g. 'fr_FR'
+     * @param     ConnectionInterface $con an optional connection object
+     *
+     * @return    ChildPersonImage The current object (for fluent API support)
+     */
+    public function removeTranslation($locale = 'en_US', ConnectionInterface $con = null)
+    {
+        if (!$this->isNew()) {
+            ChildPersonImageI18nQuery::create()
+                ->filterByPrimaryKey(array($this->getPrimaryKey(), $locale))
+                ->delete($con);
+        }
+        if (isset($this->currentTranslations[$locale])) {
+            unset($this->currentTranslations[$locale]);
+        }
+        foreach ($this->collPersonImageI18ns as $key => $translation) {
+            if ($translation->getLocale() == $locale) {
+                unset($this->collPersonImageI18ns[$key]);
+                break;
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Returns the current translation
+     *
+     * @param     ConnectionInterface $con an optional connection object
+     *
+     * @return ChildPersonImageI18n */
+    public function getCurrentTranslation(ConnectionInterface $con = null)
+    {
+        return $this->getTranslation($this->getLocale(), $con);
+    }
+
+
+        /**
+         * Get the [title] column value.
+         *
+         * @return   string
+         */
+        public function getTitle()
+        {
+        return $this->getCurrentTranslation()->getTitle();
+    }
+
+
+        /**
+         * Set the value of [title] column.
+         *
+         * @param      string $v new value
+         * @return   \Team\Model\PersonImageI18n The current object (for fluent API support)
+         */
+        public function setTitle($v)
+        {    $this->getCurrentTranslation()->setTitle($v);
+
+        return $this;
+    }
+
+
+        /**
+         * Get the [description] column value.
+         *
+         * @return   string
+         */
+        public function getDescription()
+        {
+        return $this->getCurrentTranslation()->getDescription();
+    }
+
+
+        /**
+         * Set the value of [description] column.
+         *
+         * @param      string $v new value
+         * @return   \Team\Model\PersonImageI18n The current object (for fluent API support)
+         */
+        public function setDescription($v)
+        {    $this->getCurrentTranslation()->setDescription($v);
+
+        return $this;
+    }
+
+
+        /**
+         * Get the [chapo] column value.
+         *
+         * @return   string
+         */
+        public function getChapo()
+        {
+        return $this->getCurrentTranslation()->getChapo();
+    }
+
+
+        /**
+         * Set the value of [chapo] column.
+         *
+         * @param      string $v new value
+         * @return   \Team\Model\PersonImageI18n The current object (for fluent API support)
+         */
+        public function setChapo($v)
+        {    $this->getCurrentTranslation()->setChapo($v);
+
+        return $this;
+    }
+
+
+        /**
+         * Get the [postscriptum] column value.
+         *
+         * @return   string
+         */
+        public function getPostscriptum()
+        {
+        return $this->getCurrentTranslation()->getPostscriptum();
+    }
+
+
+        /**
+         * Set the value of [postscriptum] column.
+         *
+         * @param      string $v new value
+         * @return   \Team\Model\PersonImageI18n The current object (for fluent API support)
+         */
+        public function setPostscriptum($v)
+        {    $this->getCurrentTranslation()->setPostscriptum($v);
 
         return $this;
     }
@@ -1876,6 +2481,8 @@ abstract class PersonImage implements ActiveRecordInterface
         $version->setId($this->getId());
         $version->setFile($this->getFile());
         $version->setPersonId($this->getPersonId());
+        $version->setVisible($this->getVisible());
+        $version->setPosition($this->getPosition());
         $version->setCreatedAt($this->getCreatedAt());
         $version->setUpdatedAt($this->getUpdatedAt());
         $version->setVersion($this->getVersion());
@@ -1924,6 +2531,8 @@ abstract class PersonImage implements ActiveRecordInterface
         $this->setId($version->getId());
         $this->setFile($version->getFile());
         $this->setPersonId($version->getPersonId());
+        $this->setVisible($version->getVisible());
+        $this->setPosition($version->getPosition());
         $this->setCreatedAt($version->getCreatedAt());
         $this->setUpdatedAt($version->getUpdatedAt());
         $this->setVersion($version->getVersion());

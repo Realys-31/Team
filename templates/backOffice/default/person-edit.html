@@ -12,6 +12,7 @@
 {block name="check-module"}Team{/block}
 
 {block name="main-content"}
+    {assign "person_id" $smarty.get.person_id}
     <div id="wrapper" class="container">
 
         {if $form_error}
@@ -22,9 +23,10 @@
             <div class="title title-without-tabs">
                 {intl l="Person edit" d="team.bo.default"}
             </div>
-            {hookblock name="team.additional" person=$smarty.get.person_id}
+            {hookblock name="team.additional" person=$person_id}
                 <ul class="nav nav-tabs" id="tabbed-menu">
                     <li class="active"><a href="#general" data-toggle="tab">{intl l="General"}</a></li>
+                    <li>
                     <li><a href="#images" data-toggle="tab">{intl l="Images"}</a></li>
                     <li><a href="#fonction" data-toggle="tab">{intl l="Fonction"}</a></li>
                     {forhook rel="team.additional"}
@@ -37,7 +39,7 @@
                         {include file="form/person-update.html"}
                     </div>
                     <div class="tab-pane fade" id="images">
-
+                        {include file="custom/image-upload-form.html" imageType="person" parentId=$person_id}
                     </div>
                     <div class="tab-pane fade" id="fonction">
                     </div>
@@ -61,4 +63,24 @@
             {/hookblock}
         </div>
     </div>
+{/block}
+
+{block name="javascript-initialization"}
+
+    {javascripts file='assets/js/dropzone.js'}
+        <script src="{$asset_url}"></script>
+    {/javascripts}
+    {javascripts file='assets/js/image-upload.js'}
+        <script src="{$asset_url}"></script>
+    {/javascripts}
+    {javascripts file='assets/js/jquery-ui-1.10.3.custom.min.js'}
+        <script src="{$asset_url}"></script>
+    {/javascripts}
+    <script>
+        $(function () {
+            $(document).ready(function(){
+                $.imageUploadManager.initImageDropZone();
+            });
+        });
+    </script>
 {/block}

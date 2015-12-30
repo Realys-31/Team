@@ -24,6 +24,8 @@ use Team\Model\Map\PersonImageVersionTableMap;
  * @method     ChildPersonImageVersionQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     ChildPersonImageVersionQuery orderByFile($order = Criteria::ASC) Order by the file column
  * @method     ChildPersonImageVersionQuery orderByPersonId($order = Criteria::ASC) Order by the person_id column
+ * @method     ChildPersonImageVersionQuery orderByVisible($order = Criteria::ASC) Order by the visible column
+ * @method     ChildPersonImageVersionQuery orderByPosition($order = Criteria::ASC) Order by the position column
  * @method     ChildPersonImageVersionQuery orderByCreatedAt($order = Criteria::ASC) Order by the created_at column
  * @method     ChildPersonImageVersionQuery orderByUpdatedAt($order = Criteria::ASC) Order by the updated_at column
  * @method     ChildPersonImageVersionQuery orderByVersion($order = Criteria::ASC) Order by the version column
@@ -34,6 +36,8 @@ use Team\Model\Map\PersonImageVersionTableMap;
  * @method     ChildPersonImageVersionQuery groupById() Group by the id column
  * @method     ChildPersonImageVersionQuery groupByFile() Group by the file column
  * @method     ChildPersonImageVersionQuery groupByPersonId() Group by the person_id column
+ * @method     ChildPersonImageVersionQuery groupByVisible() Group by the visible column
+ * @method     ChildPersonImageVersionQuery groupByPosition() Group by the position column
  * @method     ChildPersonImageVersionQuery groupByCreatedAt() Group by the created_at column
  * @method     ChildPersonImageVersionQuery groupByUpdatedAt() Group by the updated_at column
  * @method     ChildPersonImageVersionQuery groupByVersion() Group by the version column
@@ -55,6 +59,8 @@ use Team\Model\Map\PersonImageVersionTableMap;
  * @method     ChildPersonImageVersion findOneById(int $id) Return the first ChildPersonImageVersion filtered by the id column
  * @method     ChildPersonImageVersion findOneByFile(string $file) Return the first ChildPersonImageVersion filtered by the file column
  * @method     ChildPersonImageVersion findOneByPersonId(int $person_id) Return the first ChildPersonImageVersion filtered by the person_id column
+ * @method     ChildPersonImageVersion findOneByVisible(int $visible) Return the first ChildPersonImageVersion filtered by the visible column
+ * @method     ChildPersonImageVersion findOneByPosition(int $position) Return the first ChildPersonImageVersion filtered by the position column
  * @method     ChildPersonImageVersion findOneByCreatedAt(string $created_at) Return the first ChildPersonImageVersion filtered by the created_at column
  * @method     ChildPersonImageVersion findOneByUpdatedAt(string $updated_at) Return the first ChildPersonImageVersion filtered by the updated_at column
  * @method     ChildPersonImageVersion findOneByVersion(int $version) Return the first ChildPersonImageVersion filtered by the version column
@@ -65,6 +71,8 @@ use Team\Model\Map\PersonImageVersionTableMap;
  * @method     array findById(int $id) Return ChildPersonImageVersion objects filtered by the id column
  * @method     array findByFile(string $file) Return ChildPersonImageVersion objects filtered by the file column
  * @method     array findByPersonId(int $person_id) Return ChildPersonImageVersion objects filtered by the person_id column
+ * @method     array findByVisible(int $visible) Return ChildPersonImageVersion objects filtered by the visible column
+ * @method     array findByPosition(int $position) Return ChildPersonImageVersion objects filtered by the position column
  * @method     array findByCreatedAt(string $created_at) Return ChildPersonImageVersion objects filtered by the created_at column
  * @method     array findByUpdatedAt(string $updated_at) Return ChildPersonImageVersion objects filtered by the updated_at column
  * @method     array findByVersion(int $version) Return ChildPersonImageVersion objects filtered by the version column
@@ -159,7 +167,7 @@ abstract class PersonImageVersionQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT ID, FILE, PERSON_ID, CREATED_AT, UPDATED_AT, VERSION, VERSION_CREATED_AT, VERSION_CREATED_BY, PERSON_ID_VERSION FROM person_image_version WHERE ID = :p0 AND VERSION = :p1';
+        $sql = 'SELECT ID, FILE, PERSON_ID, VISIBLE, POSITION, CREATED_AT, UPDATED_AT, VERSION, VERSION_CREATED_AT, VERSION_CREATED_BY, PERSON_ID_VERSION FROM person_image_version WHERE ID = :p0 AND VERSION = :p1';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key[0], PDO::PARAM_INT);
@@ -371,6 +379,88 @@ abstract class PersonImageVersionQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(PersonImageVersionTableMap::PERSON_ID, $personId, $comparison);
+    }
+
+    /**
+     * Filter the query on the visible column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByVisible(1234); // WHERE visible = 1234
+     * $query->filterByVisible(array(12, 34)); // WHERE visible IN (12, 34)
+     * $query->filterByVisible(array('min' => 12)); // WHERE visible > 12
+     * </code>
+     *
+     * @param     mixed $visible The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildPersonImageVersionQuery The current query, for fluid interface
+     */
+    public function filterByVisible($visible = null, $comparison = null)
+    {
+        if (is_array($visible)) {
+            $useMinMax = false;
+            if (isset($visible['min'])) {
+                $this->addUsingAlias(PersonImageVersionTableMap::VISIBLE, $visible['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($visible['max'])) {
+                $this->addUsingAlias(PersonImageVersionTableMap::VISIBLE, $visible['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(PersonImageVersionTableMap::VISIBLE, $visible, $comparison);
+    }
+
+    /**
+     * Filter the query on the position column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByPosition(1234); // WHERE position = 1234
+     * $query->filterByPosition(array(12, 34)); // WHERE position IN (12, 34)
+     * $query->filterByPosition(array('min' => 12)); // WHERE position > 12
+     * </code>
+     *
+     * @param     mixed $position The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildPersonImageVersionQuery The current query, for fluid interface
+     */
+    public function filterByPosition($position = null, $comparison = null)
+    {
+        if (is_array($position)) {
+            $useMinMax = false;
+            if (isset($position['min'])) {
+                $this->addUsingAlias(PersonImageVersionTableMap::POSITION, $position['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($position['max'])) {
+                $this->addUsingAlias(PersonImageVersionTableMap::POSITION, $position['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(PersonImageVersionTableMap::POSITION, $position, $comparison);
     }
 
     /**

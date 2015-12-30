@@ -79,13 +79,16 @@ CREATE TABLE `person_image`
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `file` VARCHAR(255),
     `person_id` INTEGER NOT NULL,
+    `visible` TINYINT,
+    `position` INTEGER,
     `created_at` DATETIME,
     `updated_at` DATETIME,
     `version` INTEGER DEFAULT 0,
     `version_created_at` DATETIME,
     `version_created_by` VARCHAR(100),
     PRIMARY KEY (`id`),
-    INDEX `FI_person_image_person_id` (`person_id`),
+    INDEX `idx_person_image_person_id` (`person_id`),
+    INDEX `idx_person_image_person_id_position` (`person_id`, `position`),
     CONSTRAINT `fk_person_image_person_id`
         FOREIGN KEY (`person_id`)
         REFERENCES `person` (`id`)
@@ -173,6 +176,27 @@ CREATE TABLE `person_i18n`
     CONSTRAINT `person_i18n_FK_1`
         FOREIGN KEY (`id`)
         REFERENCES `person` (`id`)
+        ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+-- ---------------------------------------------------------------------
+-- person_image_i18n
+-- ---------------------------------------------------------------------
+
+DROP TABLE IF EXISTS `person_image_i18n`;
+
+CREATE TABLE `person_image_i18n`
+(
+    `id` INTEGER NOT NULL,
+    `locale` VARCHAR(5) DEFAULT 'en_US' NOT NULL,
+    `title` VARCHAR(255),
+    `description` LONGTEXT,
+    `chapo` TEXT,
+    `postscriptum` TEXT,
+    PRIMARY KEY (`id`,`locale`),
+    CONSTRAINT `person_image_i18n_FK_1`
+        FOREIGN KEY (`id`)
+        REFERENCES `person_image` (`id`)
         ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
@@ -282,6 +306,8 @@ CREATE TABLE `person_image_version`
     `id` INTEGER NOT NULL,
     `file` VARCHAR(255),
     `person_id` INTEGER NOT NULL,
+    `visible` TINYINT,
+    `position` INTEGER,
     `created_at` DATETIME,
     `updated_at` DATETIME,
     `version` INTEGER DEFAULT 0 NOT NULL,

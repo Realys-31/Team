@@ -16,6 +16,19 @@
                 </a>
             {/loop}
         </div>
+        {ifloop rel="image"}
+        {loop type="image" name="image" source="person" source_id=$ID query_namespace="Team\\Model" widht=200 height=100 backend_context="on" resize_mode="borders" visible="*"}
+        {if $PROCESSING_ERROR}
+            <img src="//placehold.it/200x100&text={intl l='Image+file+not+found'}" alt="{$TITLE}" class="center-block img-responsive">
+        {else}
+            <img src="{$IMAGE_URL nofilter}" alt="{$TITLE}" class="center-block img-responsive">
+        {/if}
+        {/loop}
+        {/ifloop}
+        {elseloop rel="image"}
+            <img src="//placehold.it/200x100&text={intl l='Image+file+not+found'}" alt="{$TITLE}" class="center-block img-responsive">
+        {/elseloop}
+        <br>
         <h3 class="text-center">{$FIRST_NAME} {$LAST_NAME}</h3>
     </div>
 </div>
