@@ -1,0 +1,16 @@
+{extends file="admin-layout.tpl"}
+{default_translation_domain domain='team.bo.default'}
+
+{block name="no-return-functions"}
+    {$admin_current_location = 'tools'}
+{/block}
+
+{block name="page-title"}{intl l='Person' d='team.bo.default'}{/block}
+
+{block name="check-resource"}admin.module{/block}
+{block name="check-access"}view{/block}
+{block name="check-module"}Team{/block}
+
+{block name="main-content"}
+
+{/block}

@@ -22,7 +22,10 @@
     <route id="team.person.create" path="/admin/module/Team/person" methods="post">
         <default key="_controller">Team:Person:create</default>
     </route>
-    <route id="team.person.edit" path="/admin/module/Team/person/update" methods="post">
+    <route id="team.person.edit" path="/admin/module/Team/person/update" methods="get">
+        <default key="_controller">Team:Person:update</default>
+    </route>
+    <route id="team.person.update" path="/admin/module/Team/person/update" methods="post">
         <default key="_controller">Team:Person:processUpdate</default>
     </route>
     <route id="team.person.delete" path="/admin/module/Team/person/delete" methods="post">

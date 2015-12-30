@@ -48,7 +48,7 @@ class PersonController extends BaseController
      */
     protected function getEditRenderTemplate()
     {
-        return $this->render("team");
+        return $this->render("person-edit");
     }
 
     /**
@@ -85,6 +85,7 @@ class PersonController extends BaseController
     }
 
     protected function redirectToEditionTemplate($request){
-        return new RedirectResponse(URL::getInstance()->absoluteUrl("/admin/module/Team/team"));
+        $id = $this->getRequest()->query->get("person_id");
+        return new RedirectResponse(URL::getInstance()->absoluteUrl("/admin/module/Team/person",["person_id" => $id]));
     }
 }

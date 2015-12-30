@@ -3,7 +3,8 @@
         <div class="pull-right">
             {loop name="auth-edit" type="auth" role="ADMIN" resource="admin.module" access="UPDATE" module="Team"}
                 <a class="btn btn-default btn-xs"
-                   title="{intl l='Modify this Person' d='team.bo.default'}">
+                   title="{intl l='Modify this Person' d='team.bo.default'}"
+                   href="{url path="/admin/module/Team/person/update" person_id=$ID}">
                     <i class="glyphicon glyphicon-edit"></i>
                 </a>
             {/loop}
