@@ -15,7 +15,7 @@ Parameters:
     <ul id="js-sort-image" class="row list-unstyled">
         {loop type="image" name="image" backend_context="on" source=$imageType order="manual" source_id=$parentId width="200" height="100" resize_mode="borders" visible="*" query_namespace="Team\\Model"}
             <li class="col-sm-6 col-md-3 ui-state-default" data-sort-id="{$ID}">
-                <a href="{url path="/admin/image/type/%image/%id/update" image=$imageType id=$ID}" title="{intl l='Update this image'}" class="thumbnail">
+                <a href="#" image=$imageType id=$ID}" title="{intl l='Update this image'}" class="thumbnail">
                     {if $PROCESSING_ERROR}
                         <img src="//placehold.it/200x100&text={intl l='Image+file+not+found'}" alt="{$TITLE}">
                     {else}
@@ -24,14 +24,9 @@ Parameters:
                 </a>
 
                 <div class="btn-group" >
-                    <a class="image-update-btn btn btn-default btn-xs disabled js-sorted-position" href="#">{$POSITION}</a>
-
                     {loop type="auth" name="can_change" role="ADMIN" resource="{$resource|default:"admin.$imageType"}" access="UPDATE"}
                     <a class="image-toggle-btn btn btn-default btn-xs {if $VISIBLE}visibility-visible{/if}" href="{url path="/admin/Team/image/type/person/%id/toggle" image=$imageType id=$ID}" data-error-message="{intl l='Please retry'}">
                         <i class="glyphicon glyphicon-eye-open"></i><i class="glyphicon glyphicon-eye-close"></i>
-                    </a>
-                    <a class="image-update-btn btn btn-default btn-xs" href="{url path="/admin/Team/image/type/person/%id/update" image=$imageType id=$ID}" data-error-message="{intl l='Please retry'}">
-                        <i class="glyphicon glyphicon-edit"></i>
                     </a>
                     {/loop}
                     {elseloop rel="can_change"}
