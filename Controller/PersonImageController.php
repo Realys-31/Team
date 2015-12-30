@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Team\Team;
 use Thelia\Controller\Admin\FileController;
 use Thelia\Core\Event\File\FileCreateOrUpdateEvent;
+use Thelia\Core\Event\File\FileDeleteEvent;
 use Thelia\Core\Event\File\FileToggleVisibilityEvent;
 use Thelia\Core\Event\TheliaEvents;
 use Thelia\Core\HttpFoundation\Response;
@@ -270,6 +271,82 @@ class PersonImageController extends FileController
     public function toggleVisibilityImageAction($parentType, $documentId)
     {
         return $this->toggleVisibilityFileAction($documentId, $parentType, 'image', TheliaEvents::IMAGE_TOGGLE_VISIBILITY);
+    }
+
+    /**
+     * Manage how a file has to be deleted
+     *
+     * @param int    $fileId     Parent id owning file being deleted
+     * @param string $parentType Parent Type owning file being deleted
+     * @param string $objectType the type of the file, image or document
+     * @param string $eventName  the event type.
+     *
+     * @return Response
+     */
+    public function deleteFileAction($fileId, $parentType, $objectType, $eventName)
+    {
+        $message = null;
+
+        $this->checkAuth(AdminResources::MODULE,Team::getModuleCode(), AccessManager::UPDATE);
+        $this->checkXmlHttpRequest();
+
+        $fileManager = $this->getFileManager();
+        $modelInstance = $fileManager->getModelInstance($objectType, $parentType);
+
+        $model = $modelInstance->getQueryInstance()->findPk($fileId);
+
+        if ($model == null) {
+            return $this->pageNotFound();
+        }
+
+        // Feed event
+        $fileDeleteEvent = new FileDeleteEvent($model);
+
+        // Dispatch Event to the Action
+        try {
+            $this->dispatch($eventName, $fileDeleteEvent);
+
+            $this->adminLogAppend(
+                AdminResources::retrieve($parentType),
+                AccessManager::UPDATE,
+                $this->getTranslator()->trans(
+                    'Deleting %obj% for %id% with parent id %parentId%',
+                    array(
+                        '%obj%' => $objectType,
+                        '%id%' => $fileDeleteEvent->getFileToDelete()->getId(),
+                        '%parentId%' => $fileDeleteEvent->getFileToDelete()->getParentId(),
+                    )
+                ),
+                $fileDeleteEvent->getFileToDelete()->getId()
+            );
+        } catch (\Exception $e) {
+            $message = $this->getTranslator()->trans(
+                'Fail to delete  %obj% for %id% with parent id %parentId% (Exception : %e%)',
+                array(
+                    '%obj%' => $objectType,
+                    '%id%' => $fileDeleteEvent->getFileToDelete()->getId(),
+                    '%parentId%' => $fileDeleteEvent->getFileToDelete()->getParentId(),
+                    '%e%' => $e->getMessage()
+                )
+            );
+
+            $this->adminLogAppend(
+                AdminResources::MODULE,
+                AccessManager::UPDATE,
+                $message,
+                $fileDeleteEvent->getFileToDelete()->getId()
+            );
+        }
+
+        if (null === $message) {
+            $message = $this->getTranslator()->trans(
+                '%obj%s deleted successfully',
+                ['%obj%' => ucfirst($objectType)],
+                'image'
+            );
+        }
+
+        return new Response($message);
     }
 
 }

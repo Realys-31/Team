@@ -30,7 +30,7 @@ Parameters:
                     <a class="image-toggle-btn btn btn-default btn-xs {if $VISIBLE}visibility-visible{/if}" href="{url path="/admin/Team/image/type/person/%id/toggle" image=$imageType id=$ID}" data-error-message="{intl l='Please retry'}">
                         <i class="glyphicon glyphicon-eye-open"></i><i class="glyphicon glyphicon-eye-close"></i>
                     </a>
-                    <a class="image-update-btn btn btn-default btn-xs" href="{url path="/admin/image/type/%image/%id/update" image=$imageType id=$ID}" data-error-message="{intl l='Please retry'}">
+                    <a class="image-update-btn btn btn-default btn-xs" href="{url path="/admin/Team/image/type/person/%id/update" image=$imageType id=$ID}" data-error-message="{intl l='Please retry'}">
                         <i class="glyphicon glyphicon-edit"></i>
                     </a>
                     {/loop}
@@ -41,7 +41,7 @@ Parameters:
                     {/elseloop}
 
                     {loop type="auth" name="can_delete" role="ADMIN" resource="{$resource|default:"admin.$imageType"}" access="DELETE"}
-                    <a class="image-delete-btn btn btn-default btn-xs" id="image-{$ID}" href="{url path="/admin/image/type/%image/delete/%id" image=$imageType id=$ID}" data-error-message="{intl l='Please retry'}">
+                    <a class="image-delete-btn btn btn-default btn-xs" id="image-{$ID}" href="{url path="/admin/Team/image/type/person/delete/%id" image=$imageType id=$ID}" data-error-message="{intl l='Please retry'}">
                         <i class="glyphicon glyphicon-trash"></i>
                     </a>
                     {/loop}
