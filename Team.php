@@ -17,6 +17,7 @@ use Team\Model\PersonFunctionQuery;
 use Team\Model\PersonImageQuery;
 use Team\Model\PersonQuery;
 use Team\Model\TeamQuery;
+use Thelia\Core\Template\TemplateDefinition;
 use Thelia\Install\Database;
 use Thelia\Module\BaseModule;
 
@@ -39,6 +40,42 @@ class Team extends BaseModule
             $database = new Database($con);
             $database->insertSql(null, [__DIR__ . "/Config/thelia.sql"]);
         }
+    }
+
+    public function getHooks(){
+        return [
+            array(
+                "type" => TemplateDefinition::BACK_OFFICE,
+                "code" => "team.extra.content.edit",
+                "title" => "Team Extra Content",
+                "description" => [
+                    "en_US" =>"Allow you to insert element in modules tab on Team edit page",
+                    "fr_FR" =>"Permet l'ajout de contenu sur la partie module de l'edition",
+                ],
+                "active" => true,
+            ),
+            array(
+                "type" => TemplateDefinition::BACK_OFFICE,
+                "code" => "team.edit.js",
+                "title" => "Team Extra Js",
+                "description" => [
+                    "en_US" =>"Allow you to insert js on Team edit page",
+                    "fr_FR" =>"Permet l'ajout de js sur l'edition",
+                ],
+                "active" => true,
+            ),
+            array(
+                "type" => TemplateDefinition::BACK_OFFICE,
+                "code" => "team.additional",
+                "title" => "Team Extra Tab",
+                "description" => [
+                    "en_US" =>"Allow you to insert a tab on Team edit page",
+                    "fr_FR" =>"Permet l'ajout d'une page sur l'edition d'une personne",
+                ],
+                "active" => true,
+                "block" => true,
+            ),
+        ];
     }
 
 }

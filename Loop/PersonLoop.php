@@ -43,6 +43,8 @@ class PersonLoop extends BaseI18nLoop implements PropelSearchLoopInterface
                 ->set('ID', $person->getId())
                 ->set('FIRST_NAME', $person->getFirstName())
                 ->set('LAST_NAME', $person->getLastName())
+                ->set('CREATE_DATE', $person->getCreatedAt())
+                ->set('UPDATE_DATE', $person->getUpdatedAt())
             ;
 
             if ($person->hasVirtualColumn('i18n_DESCRIPTION')) {
@@ -87,11 +89,11 @@ class PersonLoop extends BaseI18nLoop implements PropelSearchLoopInterface
             $this->getForceReturn()
         );
 
-        if($id = $this->getId()){
+        if ($id = $this->getId()) {
             $query->filterById($id);
         }
 
-        if($team_id = $this->getTeamId()){
+        if ($team_id = $this->getTeamId()) {
             $query->filterByTeamId($team_id);
         }
 

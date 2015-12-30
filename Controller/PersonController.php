@@ -15,6 +15,7 @@ namespace Team\Controller;
 
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Team\Controller\Base\BaseController;
+use Team\Model\PersonQuery;
 use Thelia\Tools\URL;
 use Team\Model\Person;
 
@@ -73,19 +74,27 @@ class PersonController extends BaseController
      */
     protected function getExistingObject()
     {
-        return null;
+        return PersonQuery::create()->findOneById($this->getRequest()->query->get("person_id"));
     }
 
     /**
+     * @var Person object
      * @inheritDoc
      */
     protected function hydrateObjectForm($object)
     {
-        return null;
+        $data = [
+            "id" => $object->getId(),
+            "first_name" => $object->getFirstName(),
+            "last_name" => $object->getLastName(),
+            "description" => $object->getDescription()
+        ];
+
+        return $this->getUpdateForm($data);
     }
 
     protected function redirectToEditionTemplate($request){
         $id = $this->getRequest()->query->get("person_id");
-        return new RedirectResponse(URL::getInstance()->absoluteUrl("/admin/module/Team/person",["person_id" => $id]));
+        return new RedirectResponse(URL::getInstance()->absoluteUrl("/admin/module/Team/person/update",["person_id" => $id]));
     }
 }

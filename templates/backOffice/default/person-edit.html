@@ -12,5 +12,53 @@
 {block name="check-module"}Team{/block}
 
 {block name="main-content"}
+    <div id="wrapper" class="container">
 
+        {if $form_error}
+            <div class="alert alert-danger">{$form_error_message}</div>
+        {/if}
+
+        <div class="general-block-decorator">
+            <div class="title title-without-tabs">
+                {intl l="Person edit" d="team.bo.default"}
+            </div>
+            {hookblock name="team.additional" person=$smarty.get.person_id}
+                <ul class="nav nav-tabs" id="tabbed-menu">
+                    <li class="active"><a href="#general" data-toggle="tab">{intl l="General"}</a></li>
+                    <li><a href="#images" data-toggle="tab">{intl l="Images"}</a></li>
+                    <li><a href="#fonction" data-toggle="tab">{intl l="Fonction"}</a></li>
+                    {forhook rel="team.additional"}
+                        <li><a href="#{$id}" data-toggle="tab">{$title}</a></li>
+                    {/forhook}
+                    <li><a href="#modules" data-toggle="tab">{intl l="Modules"}</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane fade in active" id="general">
+                        {include file="form/person-update.html"}
+                    </div>
+                    <div class="tab-pane fade" id="images">
+
+                    </div>
+                    <div class="tab-pane fade" id="fonction">
+                    </div>
+                    {forhook rel="team.additional"}
+                        <div class="tab-pane fade" id="{$id}">
+                            {$content nofilter}
+                        </div>
+                    {/forhook}
+                    <div class="tab-pane fade" id="modules">
+                        {ifhook rel="team.extra.content.edit"}
+                        {hook name="team.extra.content.edit"}
+                        {/ifhook}
+                        {elsehook rel="team.extra.content.edit"}
+                            <div class="alert alert-info">
+                                {intl l="There is no additionnal content for this Team" d="team.bo.default"}
+                            </div>
+                        {/elsehook}
+                    </div>
+
+                </div>
+            {/hookblock}
+        </div>
+    </div>
 {/block}

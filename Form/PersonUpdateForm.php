@@ -37,7 +37,9 @@ class PersonUpdateForm extends PersonCreateForm
                 "required" => true,
                 "constraints" => array(new NotBlank(),),
                 "attr" => array()
-            ));
+            ))
+            ->remove('team_id')
+        ;
     }
 
     public function getName()

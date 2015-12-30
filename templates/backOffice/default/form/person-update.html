@@ -1,0 +1,46 @@
+{form name="person.update"}
+  <div class="form-container">
+    {if $form_error}
+      <div class="alert alert-danger">{$form_error_message}</div>
+    {/if}
+    <form method="POST" action="{$current_url}" {form_enctype form=$form} class="clearfix">
+
+      {include "includes/inner-form-toolbar.html"
+      close_url = {url path="/admin/module/Team/team"}
+      }
+
+      {form_field form=$form field="id"}
+      {assign "person_id" $value}
+        <input type="hidden" name="{$name}" value="{$value}"/>
+      {/form_field}
+      {form_field form=$form field="success_url"}
+        <input type="hidden" name="{$name}" value="{url path='/admin/module/Team'}/person"/>
+      {/form_field}
+      {form_hidden_fields form=$form}
+
+      {loop name="person_update" type="person" backend_context="yes" id=$person_id lang=$edit_language_id}
+        <div class="row">
+          <div class="col-md-12">
+
+            {include file="form/person-create.html" form_name="person.update" update=true}
+
+            {include "includes/inner-form-toolbar.html"
+            hide_flags = true
+            close_url = {url path="/admin/module/Team/team"}
+            }
+
+            <small>
+              {intl
+              l="Person created on %created_at. Last modification: %updated_at"
+              created_at={format_date date=$CREATE_DATE}
+              updated_at={format_date date=$UPDATE_DATE}
+              d="team.bo.default"
+              }
+            </small>
+          </div>
+        </div>
+      {/loop}
+
+    </form>
+  </div>
+{/form}
