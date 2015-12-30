@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Team\Team;
 use Thelia\Controller\Admin\FileController;
 use Thelia\Core\Event\File\FileCreateOrUpdateEvent;
+use Thelia\Core\Event\File\FileToggleVisibilityEvent;
 use Thelia\Core\Event\TheliaEvents;
 use Thelia\Core\HttpFoundation\Response;
 use Thelia\Core\Security\AccessManager;
@@ -220,6 +221,55 @@ class PersonImageController extends FileController
         $args = array('imageType' => $parentType, 'parentId' => $parentId);
 
         return $this->render('custom/image-upload-list-ajax', $args);
+    }
+
+    public function toggleVisibilityFileAction($documentId, $parentType, $objectType, $eventName)
+    {
+        $message = null;
+
+        //$position = $this->getRequest()->request->get('position');
+
+        $this->checkAuth(AdminResources::MODULE,Team::getModuleCode(), AccessManager::UPDATE);
+        $this->checkXmlHttpRequest();
+
+        $fileManager = $this->getFileManager();
+        $modelInstance = $fileManager->getModelInstance($objectType, $parentType);
+
+        $model = $modelInstance->getQueryInstance()->findPk($documentId);
+
+        if ($model === null) {
+            return $this->pageNotFound();
+        }
+
+        // Feed event
+        $event = new FileToggleVisibilityEvent(
+            $modelInstance->getQueryInstance(),
+            $documentId
+        );
+
+        // Dispatch Event to the Action
+        try {
+            $this->dispatch($eventName, $event);
+        } catch (\Exception $e) {
+            $message = $this->getTranslator()->trans(
+                'Fail to update %type% visibility: %err%',
+                [ '%type%' => $objectType, '%err%' => $e->getMessage() ]
+            );
+        }
+
+        if (null === $message) {
+            $message = $this->getTranslator()->trans(
+                '%type% visibility updated',
+                [ '%type%' => ucfirst($objectType) ]
+            );
+        }
+
+        return new Response($message);
+    }
+
+    public function toggleVisibilityImageAction($parentType, $documentId)
+    {
+        return $this->toggleVisibilityFileAction($documentId, $parentType, 'image', TheliaEvents::IMAGE_TOGGLE_VISIBILITY);
     }
 
 }

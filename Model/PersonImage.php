@@ -69,7 +69,12 @@ class PersonImage extends BasePersonImage implements FileModelInterface
      */
     public function getQueryInstance()
     {
-        return PersonQuery::create();
+        return PersonImageQuery::create();
+    }
+
+    public function setDispatcher($dispatcher)
+    {
+        return $this;
     }
 
 }

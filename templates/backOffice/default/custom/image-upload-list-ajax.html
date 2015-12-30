@@ -27,7 +27,7 @@ Parameters:
                     <a class="image-update-btn btn btn-default btn-xs disabled js-sorted-position" href="#">{$POSITION}</a>
 
                     {loop type="auth" name="can_change" role="ADMIN" resource="{$resource|default:"admin.$imageType"}" access="UPDATE"}
-                    <a class="image-toggle-btn btn btn-default btn-xs {if $VISIBLE}visibility-visible{/if}" href="{url path="/admin/image/type/%image/%id/toggle" image=$imageType id=$ID}" data-error-message="{intl l='Please retry'}">
+                    <a class="image-toggle-btn btn btn-default btn-xs {if $VISIBLE}visibility-visible{/if}" href="{url path="/admin/Team/image/type/person/%id/toggle" image=$imageType id=$ID}" data-error-message="{intl l='Please retry'}">
                         <i class="glyphicon glyphicon-eye-open"></i><i class="glyphicon glyphicon-eye-close"></i>
                     </a>
                     <a class="image-update-btn btn btn-default btn-xs" href="{url path="/admin/image/type/%image/%id/update" image=$imageType id=$ID}" data-error-message="{intl l='Please retry'}">
