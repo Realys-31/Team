@@ -1,6 +1,9 @@
 <script>
-
   $(function () {
+    $('a.person-delete').click(function (ev) {
+      $('#person_delete_id').val($(this).data('id'));
+    });
+
     $('a.person-create').click(function (ev) {
       $('#attr-person-team-id',"#person-create").val($(this).data('id'));
     });
