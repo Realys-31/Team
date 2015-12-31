@@ -39,6 +39,7 @@
         <form name="person.create" class="Team\Form\PersonCreateForm"/>
         <form name="person.update" class="Team\Form\PersonUpdateForm"/>
         <form name="person_function.create" class="Team\Form\FunctionCreateForm"/>
+        <form name="person_function.link" class="Team\Form\FunctionLinkForm"/>
     </forms>
 
     <services>
