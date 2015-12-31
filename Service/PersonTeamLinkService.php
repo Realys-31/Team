@@ -75,7 +75,7 @@ class PersonTeamLinkService extends AbstractBaseService implements BaseServiceIn
         $event = new PersonTeamLinkEvent();
         $event->setPersonTeamLink($link);
 
-        $this->create($event);
+        $this->update($event);
 
         return $event->getPersonTeamLink();
     }

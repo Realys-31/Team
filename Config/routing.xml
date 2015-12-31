@@ -32,6 +32,17 @@
         <default key="_controller">Team:Person:delete</default>
     </route>
 
+    <!-- Person Function-->
+    <route id="team.person.function.create" path="/admin/module/Team/function" methods="post">
+        <default key="_controller">Team:Function:create</default>
+    </route>
+    <route id="team.person.function.update" path="/admin/module/Team/function/update" methods="post">
+        <default key="_controller">Team:Function:processUpdate</default>
+    </route>
+    <route id="team.person.function.delete" path="/admin/module/Team/function/delete" methods="post">
+        <default key="_controller">Team:Function:delete</default>
+    </route>
+
     <!-- Route to the file controller -->
 
     <route id="team.image.save-ajax" path="/admin/Team/image/type/{parentType}/{parentId}/save-ajax">

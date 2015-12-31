@@ -88,7 +88,7 @@ class PersonService extends AbstractBaseService implements BaseServiceInterface
         $event = new PersonEvent();
         $event->setPerson($person);
 
-        $this->create($event);
+        $this->update($event);
 
         return $event->getPerson();
     }

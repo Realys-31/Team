@@ -76,7 +76,7 @@ class TeamService extends AbstractBaseService implements BaseServiceInterface
         $event = new TeamEvent();
         $event->setTeam($team);
 
-        $this->create($event);
+        $this->update($event);
 
         return $event->getTeam();
     }

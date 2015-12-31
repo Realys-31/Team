@@ -30,6 +30,7 @@
         <loop name="team" class="Team\Loop\TeamLoop"/>
         <loop name="person" class="Team\Loop\PersonLoop"/>
         <loop name="image" class="Team\Loop\PersonImageLoop"/>
+        <loop name="person_function" class="Team\Loop\PersonFunctionLoop"/>
     </loops>
 
     <forms>
@@ -37,6 +38,7 @@
         <form name="team.update" class="Team\Form\TeamUpdateForm"/>
         <form name="person.create" class="Team\Form\PersonCreateForm"/>
         <form name="person.update" class="Team\Form\PersonUpdateForm"/>
+        <form name="person_function.create" class="Team\Form\FunctionCreateForm"/>
     </forms>
 
     <services>
@@ -50,6 +52,16 @@
             </call>
         </service>
         <service id="person_team_link_service" class="Team\Service\PersonTeamLinkService">
+            <call method="setDispatcher">
+                <argument type="service" id="event_dispatcher"/>
+            </call>
+        </service>
+        <service id="person_function_service" class="Team\Service\FunctionService">
+            <call method="setDispatcher">
+                <argument type="service" id="event_dispatcher"/>
+            </call>
+        </service>
+        <service id="person_function_link_service" class="Team\Service\FunctionPersonLinkService">
             <call method="setDispatcher">
                 <argument type="service" id="event_dispatcher"/>
             </call>

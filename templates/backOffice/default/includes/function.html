@@ -1,0 +1,29 @@
+<br>
+<div class="row">
+    <div class="col-md-12">
+        {form name="person.update"}
+            <div class="form-container">
+                {if $form_error}
+                    <div class="alert alert-danger">{$form_error_message}</div>
+                {/if}
+                <form method="POST" action="{url path="/admin/module/Team/function" person_id=$person_id}" {form_enctype form=$form} class="clearfix form-inline">
+                    {loop name="person_update" type="person" backend_context="yes" id=$person_id lang=$edit_language_id}
+                        <div class="row">
+                            <div class="col-md-12">
+                                {include file="form/function-create.html" form_name="person_function.create"}
+                                <button type="submit" class="btn btn-primary">{intl l="Add"}</button>
+                            </div>
+                        </div>
+                    {/loop}
+                </form>
+            </div>
+        {/form}
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        {loop type="person_function" name="function"}
+            {$CODE} {$LABEL}
+        {/loop}
+    </div>
+</div>
