@@ -20,6 +20,7 @@ use Thelia\Core\Event\File\FileCreateOrUpdateEvent;
 use Thelia\Core\Event\File\FileDeleteEvent;
 use Thelia\Core\Event\File\FileToggleVisibilityEvent;
 use Thelia\Core\Event\TheliaEvents;
+use Thelia\Core\Event\UpdateFilePositionEvent;
 use Thelia\Core\HttpFoundation\Response;
 use Thelia\Core\Security\AccessManager;
 use Thelia\Core\Security\Resource\AdminResources;
@@ -307,7 +308,7 @@ class PersonImageController extends FileController
             $this->dispatch($eventName, $fileDeleteEvent);
 
             $this->adminLogAppend(
-                AdminResources::retrieve($parentType),
+                AdminResources::MODULE,
                 AccessManager::UPDATE,
                 $this->getTranslator()->trans(
                     'Deleting %obj% for %id% with parent id %parentId%',
@@ -343,6 +344,51 @@ class PersonImageController extends FileController
                 '%obj%s deleted successfully',
                 ['%obj%' => ucfirst($objectType)],
                 'image'
+            );
+        }
+
+        return new Response($message);
+    }
+
+    public function updateFilePositionAction($parentType, $parentId, $objectType, $eventName)
+    {
+        $message = null;
+
+        $position = $this->getRequest()->request->get('position');
+
+        $this->checkAuth(AdminResources::MODULE,Team::getModuleCode(), AccessManager::UPDATE);
+        $this->checkXmlHttpRequest();
+
+        $fileManager = $this->getFileManager();
+        $modelInstance = $fileManager->getModelInstance($objectType, $parentType);
+        $model = $modelInstance->getQueryInstance()->findPk($parentId);
+
+        if ($model === null || $position === null) {
+            return $this->pageNotFound();
+        }
+
+        // Feed event
+        $event = new UpdateFilePositionEvent(
+            $modelInstance->getQueryInstance($parentType),
+            $parentId,
+            UpdateFilePositionEvent::POSITION_ABSOLUTE,
+            $position
+        );
+
+        // Dispatch Event to the Action
+        try {
+            $this->dispatch($eventName, $event);
+        } catch (\Exception $e) {
+            $message = $this->getTranslator()->trans(
+                'Fail to update %type% position: %err%',
+                [ '%type%' => $objectType, '%err%' => $e->getMessage() ]
+            );
+        }
+
+        if (null === $message) {
+            $message = $this->getTranslator()->trans(
+                '%type% position updated',
+                [ '%type%' => ucfirst($objectType) ]
             );
         }
 

@@ -5,9 +5,15 @@ namespace Team\Model;
 use Team\Model\Base\PersonImage as BasePersonImage;
 use Thelia\Files\FileModelInterface;
 use Thelia\Model\ConfigQuery;
+use Thelia\Model\Tools\PositionManagementTrait;
 
 class PersonImage extends BasePersonImage implements FileModelInterface
 {
+
+
+    use PositionManagementTrait;
+
+    protected $dispatcher;
 
     /**
      * @inheritDoc
@@ -74,7 +80,14 @@ class PersonImage extends BasePersonImage implements FileModelInterface
 
     public function setDispatcher($dispatcher)
     {
+        $this->dispatcher = $dispatcher;
+
         return $this;
+    }
+
+    public function getDispatcher()
+    {
+        return $this->dispatcher;
     }
 
 }
