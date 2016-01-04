@@ -48,6 +48,10 @@ class PersonFunctionLoop extends BaseI18nLoop implements PropelSearchLoopInterfa
                 $loopResultRow->set("LABEL", $personFunction->getVirtualColumn('i18n_LABEL'));
             }
 
+            if ($personFunction->hasVirtualColumn('link_id')) {
+                $loopResultRow->set("LINK_ID", $personFunction->getVirtualColumn('link_id'));
+            }
+
             $loopResult->addRow($loopResultRow);
         }
 

@@ -14,6 +14,7 @@
 namespace Team\Form;
 
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Team\Model\PersonFunctionQuery;
 use Team\Team;
 use Thelia\Form\BaseForm;
 
@@ -31,9 +32,9 @@ class FunctionLinkForm extends BaseForm
     {
         $this->formBuilder
             ->add("function", 'choice', array(
-                "choices" => [],
-                "label" => $this->translator->trans("Contact Type", [], Team::DOMAIN_NAME),
-                "label_attr" => ["for" => "attr-dealer-contact-info-type"],
+                "choices" => $this->getFunction(),
+                "label" => $this->translator->trans("Function Id", [], Team::DOMAIN_NAME),
+                "label_attr" => ["for" => "attr-function-id"],
                 "required" => true,
                 "attr" => array()
             ))
@@ -48,6 +49,15 @@ class FunctionLinkForm extends BaseForm
 
     public function getName()
     {
-        return "person_function_link";
+        return "person_function_link_create";
+    }
+
+    protected function getFunction(){
+        $functions = PersonFunctionQuery::create()->find();
+        $retour = [];
+        foreach($functions as $function){
+            $retour[$function->getId()] = $function->getLabel();
+        }
+        return $retour;
     }
 }

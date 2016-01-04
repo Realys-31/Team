@@ -63,11 +63,12 @@
                 </div>
             {/hookblock}
         </div>
+        {include file="modal/function.html"}
     </div>
 {/block}
 
 {block name="javascript-initialization"}
-
+    {include file="js/function-js.html"}
     {javascripts file='assets/js/dropzone.js'}
         <script src="{$asset_url}"></script>
     {/javascripts}
@@ -79,7 +80,7 @@
     {/javascripts}
     <script>
         $(function () {
-            $(document).ready(function(){
+            $(document).ready(function () {
                 $.imageUploadManager.initImageDropZone();
             });
         });

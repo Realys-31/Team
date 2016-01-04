@@ -43,6 +43,15 @@
         <default key="_controller">Team:Function:delete</default>
     </route>
 
+    <!-- Person Function Link -->
+    <route id="team.person.function.link.create" path="/admin/module/Team/function/link" methods="post">
+        <default key="_controller">Team:FunctionLink:create</default>
+    </route>
+
+    <route id="team.person.function.link.delete" path="/admin/module/Team/function/link/delete" methods="post">
+        <default key="_controller">Team:FunctionLink:delete</default>
+    </route>
+
     <!-- Route to the file controller -->
 
     <route id="team.image.save-ajax" path="/admin/Team/image/type/{parentType}/{parentId}/save-ajax">

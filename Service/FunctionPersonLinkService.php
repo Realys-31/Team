@@ -101,14 +101,14 @@ class FunctionPersonLinkService extends AbstractBaseService implements BaseServi
             }
         }
 
-        if(isset($data["function_id"]) && isset($data["person_id"])){
-            $link = PersonFunctionLinkQuery::create()->filterByPersonId($data["person_id"])->filterByFunctionId($data["function_id"])->findOne();
+        if(isset($data["function"]) && isset($data["person"])){
+            $link = PersonFunctionLinkQuery::create()->filterByPersonId($data["person"])->filterByFunctionId($data["function"])->findOne();
             if ($link) {
                 throw new \Exception("A link already exist",403);
             }
 
-            $model->setFunctionId($data["function_id"]);
-            $model->setPersonId($data["person_id"]);
+            $model->setFunctionId($data["function"]);
+            $model->setPersonId($data["person"]);
         }
 
         return $model;

@@ -1,0 +1,19 @@
+{* DELETE modal *}
+
+{capture "function_delete"}
+  {intl l="Do you really want to remove this Function ?" d="team.bo.default"}
+  <input type="hidden" name="person_function_link_id" id="function_delete_id" value=""/>
+  <input type="hidden" name="person_id" value="{$person_id}"/>
+{/capture}
+
+{include file="includes/generic-confirm-dialog.html"
+
+dialog_id       = "person-function-delete"
+dialog_title    = {intl l="Remove a function" d="team.bo.default"}
+dialog_message  = {$smarty.capture.function_delete nofilter}
+
+dialog_ok_label     = {intl l="Delete"}
+dialog_cancel_label = {intl l="Cancel"}
+
+form_action         = {token_url path='/admin/module/Team/function/link/delete'}
+}

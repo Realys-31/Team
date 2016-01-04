@@ -1,8 +1,9 @@
 <br>
 <div class="row">
-    <div class="col-md-12">
-        <h3>{intl l="Create a function" d="team.bo.default"}</h3>
-        {form name="person_function.create"}
+    <div class="col-sm-12 col-md-6">
+        <div class="well">
+            <h3>{intl l="Create a function" d="team.bo.default"}</h3>
+            {form name="person_function.create"}
             <div class="form-container">
                 {if $form_error}
                     <div class="alert alert-danger">{$form_error_message}</div>
@@ -20,31 +21,46 @@
                     {/loop}
                 </form>
             </div>
+        </div>
         {/form}
     </div>
-</div>
-<br>
-<div class="row">
-    <div class="col-sm-12">
-        <h3>{intl l="Add a function to this person" d="team.bo.default"}</h3>
-        {form name="person_function.link"}
-        <form method="POST"
-              action="{url path="/admin/module/Team/function/link" person_id=$person_id}" {form_enctype form=$form}
-              class="clearfix form-inline">
-            {form_hidden_fields form=$form}
-            {render_form_field form=$form field="success_url" value={url path="/admin/module/Team/person/update" person_id=$person_id}}
-            {form_field form=$form field="person"}
-                <input type="hidden" id="{$label_attr.for}" name="{$name}" value="{$person_id}"/>
-            {/form_field}
-            {form_field form=$form field="function"}
-            <select class="form-control" name="{$name}">
-                {loop type="person_function" name="function"}
-                    <option value="{$ID}">{$LABEL}</option>
+    <div class="col-sm-6">
+        <div class="well">
+            <h3>{intl l="Add a function to this person" d="team.bo.default"}</h3>
+            {form name="person_function_link.create"}
+            <form method="POST"
+                  action="{url path="/admin/module/Team/function/link" person_id=$person_id}" {form_enctype form=$form}
+                  class="clearfix form-inline">
+                {form_hidden_fields form=$form}
+                {render_form_field form=$form field="success_url" value={url path="/admin/module/Team/person/update" person_id=$person_id}}
+                {form_field form=$form field="person"}
+                    <input type="hidden" id="{$label_attr.for}" name="{$name}" value="{$person_id}"/>
+                {/form_field}
+                {form_field form=$form field="function"}
+                    <select class="form-control" name="{$name}">
+                        {loop type="person_function" name="function"}
+                            <option value="{$ID}">{$LABEL}</option>
+                        {/loop}
+                    </select>
+                {/form_field}
+                <button type="submit" class="btn btn-primary">{intl l="Add"}</button>
+                {/form}
+            </form>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="well">
+            <h3>{intl l="Function link to this Person" d="team.bo.default"}</h3>
+            <ul>
+                {loop type="person_function" name="function" person_id=$person_id}
+                    <li>{$LABEL} <a class="btn btn-default btn-xs function-delete"
+                                    title="{intl l='Delete this Function' d='team.bo.default'}"
+                                    data-target="#person-function-delete" data-toggle="modal" data-id="{$LINK_ID}">
+                            <i class="glyphicon glyphicon-trash"></i>
+                        </a>
+                    </li>
                 {/loop}
-            </select>
-            {/form_field}
-            <button type="submit" class="btn btn-primary">{intl l="Add"}</button>
-            {/form}
-        </form>
+            </ul>
+        </div>
     </div>
 </div>

@@ -31,10 +31,12 @@ class PersonFunctionQuery extends BasePersonFunctionQuery
             $id = implode(",", $id);
         }
 
-        $personJoin = new Join(PersonFunctionTableMap::ID, PersonFunctionLinkTableMap::PERSON_ID, Criteria::LEFT_JOIN);
+        $personJoin = new Join(PersonFunctionTableMap::ID, PersonFunctionLinkTableMap::FUNCTION_ID, Criteria::LEFT_JOIN);
         $this
             ->addJoinObject($personJoin, "teamJoin")
             ->where(PersonFunctionLinkTableMap::PERSON_ID . " " . Criteria::IN . " (" . $id . ")");
+
+        $this->withColumn(PersonFunctionLinkTableMap::ID,"link_id");
 
         return $this;
     }
