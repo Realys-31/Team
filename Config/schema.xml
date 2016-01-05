@@ -122,5 +122,4 @@
         </behavior>
     </table>
 
-    <external-schema filename="local/config/schema.xml" referenceOnly="true"/>
 </database>

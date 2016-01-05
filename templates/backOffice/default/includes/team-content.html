@@ -1,0 +1,101 @@
+<div id="wrapper" class="container">
+
+  {if $general_error}
+    <div class="alert alert-danger">
+      {$general_error}
+    </div>
+  {/if}
+
+  <!-- Team list -->
+  <div class="general-block-decorator">
+    <div class="row inner-toolbar">
+      <div class="col-md-3 inner-actions">
+        {if $hide_flags != true}
+          <ul class="nav nav-pills">
+            {loop name="lang_list" type="lang"}
+              <li {if $ID == $edit_language_id}class="active"{/if}>
+                {if $current_tab}
+                  {$lang_url = {url path={$page_url|default:$current_url nofilter} edit_language_id=$ID current_tab=$current_tab}}
+                {else}
+                  {$lang_url = {url path={$page_url|default:$current_url nofilter} edit_language_id=$ID}}
+                {/if}
+                <a class="language-change-button" data-language-id="{$ID}"
+                   href="{$lang_url nofilter}"
+                   title="{intl l='Edit information in %lng' lng={$TITLE}}">
+                  <img src="{image file="assets/img/flags/$CODE.png"}" alt=$TITLE/>
+                </a>
+              </li>
+            {/loop}
+          </ul>
+        {/if}
+      </div>
+      <div class="col-md-3">
+      </div>
+      <div class="col-md-6 inner-actions text-right">
+        {loop name="auth-create" type="auth" role="ADMIN" resource="admin.module" access="CREATE" module="Dealer"}
+          <div class="pull-right">
+            <a class="btn btn-default btn-primary"
+               title="{intl l='Create a new Team' d='team.bo.default'}"
+               data-target="#team-create" data-toggle="modal">
+              <i class="glyphicon glyphicon-plus-sign"></i>
+            </a>
+          </div>
+        {/loop}
+      </div>
+    </div>
+    <br>
+    {ifloop rel="team"}
+      <div class="panel-group" id="teams" role="tablist" aria-multiselectable="true">
+        {loop type="team" name="team"}
+          <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="heading-{$ID}">
+              <h4 class="panel-title">
+                <div class="pull-right">
+
+                  {loop name="auth-edit" type="auth" role="ADMIN" resource="admin.module" access="CREATE" module="Team"}
+                    <a class="btn btn-primary btn-xs person-create"
+                       title="{intl l='Create a Person' d='team.bo.default'}"
+                       data-target="#person-create" data-toggle="modal" data-id="{$ID}">
+                      <i class="glyphicon glyphicon-plus-sign"></i>
+                    </a>
+                  {/loop}
+                  {loop name="auth-edit" type="auth" role="ADMIN" resource="admin.module" access="UPDATE" module="Team"}
+                    <a class="btn btn-default btn-xs team-update"
+                       title="{intl l='Modify this Team' d='team.bo.default'}"
+                       data-target="#team-update" data-toggle="modal" data-id="{$ID}"
+                       data-title="{$TITLE}">
+                      <i class="glyphicon glyphicon-edit"></i>
+                    </a>
+                  {/loop}
+                  {loop name="auth-delete" type="auth" role="ADMIN" resource="admin.module" access="DELETE" module="Team"}
+                    <a class="btn btn-default btn-xs team-delete"
+                       title="{intl l='Delete this Team' d='team.bo.default'}"
+                       data-target="#team-delete" data-toggle="modal" data-id="{$ID}">
+                      <i class="glyphicon glyphicon-trash"></i>
+                    </a>
+                  {/loop}
+                </div>
+                <a role="button" data-toggle="collapse" data-parent="#teams" href="#collapse-{$ID}"
+                   aria-expanded="true" aria-controls="collapse-{$ID}">
+                  {$TITLE}
+                </a>
+              </h4>
+            </div>
+            <div id="collapse-{$ID}" class="panel-collapse collapse {if $LOOP_COUNT == 1}in{/if}"
+                 role="tabpanel"
+                 aria-labelledby="heading-{$ID}">
+              <div class="panel-body">
+                {include file="includes/person.html"}
+              </div>
+            </div>
+          </div>
+        {/loop}
+      </div>
+    {/ifloop}
+    {elseloop rel="team"}
+      <div class="alert alert-info">
+        {intl l="There is no Team" d="team.bo.default"}
+      </div>
+    {/elseloop}
+  </div>
+</div>
