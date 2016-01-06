@@ -75,6 +75,16 @@ class Team extends BaseModule
                 "active" => true,
                 "block" => true,
             ),
+            array(
+                "type" => TemplateDefinition::BACK_OFFICE,
+                "code" => "team.edit.nav.bar",
+                "title" => "Team Nav Tab",
+                "description" => [
+                    "en_US" =>"Allow you to insert link in navigation bar",
+                    "fr_FR" =>"Permet l'ajout d'un lien sur la barre de navigation",
+                ],
+                "active" => true,
+            ),
         ];
     }
 

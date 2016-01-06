@@ -21,6 +21,9 @@
 
         <div class="general-block-decorator">
             <div class="title title-without-tabs">
+                <div class="pull-right">
+                    {hook name="team.edit.nav.bar" person_id=$person_id}
+                </div>
                 {intl l="Person edit" d="team.bo.default"}
             </div>
             {hookblock name="team.additional" person=$person_id}
