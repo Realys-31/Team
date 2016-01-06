@@ -32,7 +32,7 @@
                   action="{url path="/admin/module/Team/function/link" person_id=$person_id}" {form_enctype form=$form}
                   class="clearfix form-inline">
                 {form_hidden_fields form=$form}
-                {render_form_field form=$form field="success_url" value={url path="/admin/module/Team/person/update" person_id=$person_id}}
+                {render_form_field form=$form field="success_url" value={url path="/admin/module/Team/person/update#function" person_id=$person_id}}
                 {form_field form=$form field="person"}
                     <input type="hidden" id="{$label_attr.for}" name="{$name}" value="{$person_id}"/>
                 {/form_field}

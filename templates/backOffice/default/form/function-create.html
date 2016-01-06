@@ -6,7 +6,7 @@
     <input type="hidden" name="{$name}" value="{$LOCALE}"/>
 {/form_field}
 {/loop}
-{render_form_field form=$form field="success_url" value={url path="/admin/module/Team/person/update" person_id=$person_id}}
+{render_form_field form=$form field="success_url" value={url path="/admin/module/Team/person/update#function" person_id=$person_id}}
 {form_field form=$form field="code"}
     <div class="form-group">
         <label class="control-label" for="{$label_attr.for}">

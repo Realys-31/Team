@@ -28,7 +28,7 @@
                     <li class="active"><a href="#general" data-toggle="tab">{intl l="General"}</a></li>
                     <li>
                     <li><a href="#images" data-toggle="tab">{intl l="Images"}</a></li>
-                    <li><a href="#fonction" data-toggle="tab">{intl l="Fonction"}</a></li>
+                    <li><a href="#function" data-toggle="tab">{intl l="Fonction"}</a></li>
                     {forhook rel="team.additional"}
                         <li><a href="#{$id}" data-toggle="tab">{$title}</a></li>
                     {/forhook}
@@ -41,7 +41,7 @@
                     <div class="tab-pane fade" id="images">
                         {include file="custom/image-upload-form.html" imageType="person" parentId=$person_id}
                     </div>
-                    <div class="tab-pane fade" id="fonction">
+                    <div class="tab-pane fade" id="function">
                         {include file="includes/function.html" person_id=$person_id}
                     </div>
                     {forhook rel="team.additional"}
@@ -82,6 +82,13 @@
         $(function () {
             $(document).ready(function () {
                 $.imageUploadManager.initImageDropZone();
+                var hash = location.hash.slice(1);
+                if (!hash) {
+                    hash = "general";
+                }
+
+                $('#tabbed-menu a[href="#' + hash + '"]').tab('show');
+
             });
         });
     </script>
