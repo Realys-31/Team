@@ -25,6 +25,7 @@ use Thelia\Core\HttpFoundation\Response;
 use Thelia\Core\Security\AccessManager;
 use Thelia\Core\Security\Resource\AdminResources;
 use Thelia\Files\Exception\ProcessFileException;
+use Thelia\Files\FileManager;
 use Thelia\Model\Lang;
 use Thelia\Tools\Rest\ResponseRest;
 
@@ -393,6 +394,16 @@ class PersonImageController extends FileController
         }
 
         return new Response($message);
+    }
+
+    /**
+     * Get the FileManager
+     *
+     * @return FileManager
+     */
+    public function getFileManager()
+    {
+        return $this->container->get('team.file_manager');
     }
 
 }

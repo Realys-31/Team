@@ -44,7 +44,7 @@
 
     <services>
         <!-- The file manager -->
-        <service id="thelia.file_manager" class="Thelia\Files\FileManager">
+        <service id="team.file_manager" class="Thelia\Files\FileManager">
             <argument>%file_model.classes%</argument>
         </service>
         <service id="team_service" class="Team\Service\TeamService">
