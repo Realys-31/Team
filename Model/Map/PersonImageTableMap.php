@@ -183,7 +183,7 @@ class PersonImageTableMap extends TableMap
         $this->addPrimaryKey('ID', 'Id', 'INTEGER', true, null, null);
         $this->addColumn('FILE', 'File', 'VARCHAR', false, 255, null);
         $this->addForeignKey('PERSON_ID', 'PersonId', 'INTEGER', 'person', 'ID', true, null, null);
-        $this->addColumn('VISIBLE', 'Visible', 'TINYINT', false, null, null);
+        $this->addColumn('VISIBLE', 'Visible', 'TINYINT', true, null, 1);
         $this->addColumn('POSITION', 'Position', 'INTEGER', false, null, null);
         $this->addColumn('CREATED_AT', 'CreatedAt', 'TIMESTAMP', false, null, null);
         $this->addColumn('UPDATED_AT', 'UpdatedAt', 'TIMESTAMP', false, null, null);

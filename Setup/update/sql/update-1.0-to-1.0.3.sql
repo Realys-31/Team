@@ -1,0 +1,2 @@
+ALTER TABLE `person_image`
+MODIFY `visible` TINYINT DEFAULT 1 NOT NULL;

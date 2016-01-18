@@ -42,6 +42,18 @@ class Team extends BaseModule
         }
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function update($currentVersion, $newVersion, ConnectionInterface $con)
+    {
+        if($currentVersion == "1.0" && $currentVersion != $newVersion){
+            $database = new Database($con);
+            $database->insertSql(null, [__DIR__ . "/Setup/update/sql/update-1.0-to-1.0.3.sql"]);
+        }
+    }
+
+
     public function getHooks(){
         return [
             array(

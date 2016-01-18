@@ -83,6 +83,7 @@ abstract class PersonImage implements ActiveRecordInterface
 
     /**
      * The value for the visible field.
+     * Note: this column has a database default value of: 1
      * @var        int
      */
     protected $visible;
@@ -191,6 +192,7 @@ abstract class PersonImage implements ActiveRecordInterface
      */
     public function applyDefaultValues()
     {
+        $this->visible = 1;
         $this->version = 0;
     }
 
@@ -815,6 +817,10 @@ abstract class PersonImage implements ActiveRecordInterface
      */
     public function hasOnlyDefaultValues()
     {
+            if ($this->visible !== 1) {
+                return false;
+            }
+
             if ($this->version !== 0) {
                 return false;
             }
