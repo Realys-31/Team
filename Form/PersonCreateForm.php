@@ -40,8 +40,7 @@ class PersonCreateForm extends BaseForm
             ->add("last_name", "text", array(
                 "label" => $this->translator->trans("Last Name", [], Team::DOMAIN_NAME),
                 "label_attr" => ["for" => "attr-person-last-name"],
-                "required" => true,
-                "constraints" => array(new NotBlank(),),
+                "required" => false,
                 "attr" => array()
             ))
             ->add("description", "text", array(
