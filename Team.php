@@ -45,7 +45,7 @@ class Team extends BaseModule
     /**
      * @inheritDoc
      */
-    public function update($currentVersion, $newVersion, ConnectionInterface $con)
+    public function update($currentVersion, $newVersion, ConnectionInterface $con = null)
     {
         if($currentVersion == "1.0" && $currentVersion != $newVersion){
             $database = new Database($con);
