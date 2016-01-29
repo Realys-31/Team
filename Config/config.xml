@@ -4,24 +4,7 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://thelia.net/schema/dic/config http://thelia.net/schema/dic/config/thelia-1.0.xsd">
     <parameters>
-        <parameter key="file_model.classes" type="collection">
-            <parameter key="document.product">Thelia\Model\ProductDocument</parameter>
-            <parameter key="image.product">Thelia\Model\ProductImage</parameter>
-
-            <parameter key="document.category">Thelia\Model\CategoryDocument</parameter>
-            <parameter key="image.category">Thelia\Model\CategoryImage</parameter>
-
-            <parameter key="document.content">Thelia\Model\ContentDocument</parameter>
-            <parameter key="image.content">Thelia\Model\ContentImage</parameter>
-
-            <parameter key="document.folder">Thelia\Model\FolderDocument</parameter>
-            <parameter key="image.folder">Thelia\Model\FolderImage</parameter>
-
-            <parameter key="document.brand">Thelia\Model\BrandDocument</parameter>
-            <parameter key="image.brand">Thelia\Model\BrandImage</parameter>
-
-            <parameter key="image.module">Thelia\Model\ModuleImage</parameter>
-
+        <parameter key="file_model_team.classes" type="collection">
             <parameter key="image.person">Team\Model\PersonImage</parameter>
         </parameter>
     </parameters>
@@ -45,7 +28,7 @@
     <services>
         <!-- The file manager -->
         <service id="team.file_manager" class="Thelia\Files\FileManager">
-            <argument>%file_model.classes%</argument>
+            <argument>%file_model_team.classes%</argument>
         </service>
         <service id="team_service" class="Team\Service\TeamService">
             <call method="setDispatcher">
