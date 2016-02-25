@@ -24,6 +24,6 @@ class PersonImageLoop extends Image
     /**
      * @var array Possible standard image sources
      */
-    protected $possible_sources = array('category', 'product', 'folder', 'content', 'module', 'brand', 'person');
+    protected $possible_sources = array('person');
 
 }

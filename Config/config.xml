@@ -12,7 +12,7 @@
     <loops>
         <loop name="team" class="Team\Loop\TeamLoop"/>
         <loop name="person" class="Team\Loop\PersonLoop"/>
-        <loop name="image" class="Team\Loop\PersonImageLoop"/>
+        <loop name="team_image" class="Team\Loop\PersonImageLoop"/>
         <loop name="person_function" class="Team\Loop\PersonFunctionLoop"/>
     </loops>
 
