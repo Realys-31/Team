@@ -17,6 +17,7 @@ use Symfony\Component\EventDispatcher\Event;
 use Team\Event\PersonEvent;
 use Team\Event\TeamEvents;
 use Team\Model\Person;
+use Team\Model\PersonI18nQuery;
 use Team\Model\PersonQuery;
 use Team\Service\Base\AbstractBaseService;
 use Team\Service\Base\BaseServiceInterface;
@@ -50,8 +51,37 @@ class PersonService extends AbstractBaseService implements BaseServiceInterface
 
     protected function updateProcess(Event $event)
     {
-        /** @var PersonEvent $event */
-        $event->getPerson()->save();
+        /**
+         * @var PersonEvent $event
+         * @var Person $person
+         */
+        $person = $event->getPerson();
+
+        $existingPersonQuery = PersonQuery::create()
+            ->filterById($person->getId())
+            ->filterByLastName($person->getLastName())
+            ->filterByFirstName($person->getFirstName())
+        ;
+
+        if (null === $existingPersonQuery->findOne()) {
+            $person->save();
+        // to avoid infinite loops due to model, we need to register by hand the new person description if it has been changed
+        } elseif (
+            null === $existingPersonQuery
+                ->usePersonI18nQuery()
+                    ->filterByLocale($person->getLocale())
+                    ->filterByDescription($person->getDescription())
+                ->endUse()
+                ->findOne()
+        ) {
+            PersonI18nQuery::create()
+                ->filterByLocale($person->getLocale())
+                ->filterById($person->getId())
+                ->findOne()
+                ->setDescription($person->getDescription())
+                ->save()
+            ;
+        }
     }
 
     protected function deleteProcess(Event $event)
