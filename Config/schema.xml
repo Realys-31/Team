@@ -12,10 +12,6 @@
         <behavior name="i18n">
             <parameter name="i18n_columns" value="title,description"/>
         </behavior>
-        <behavior name="versionable">
-            <parameter name="log_created_at" value="true"/>
-            <parameter name="log_created_by" value="true"/>
-        </behavior>
     </table>
 
     <table name="person" namespace="Team\Model">
@@ -27,10 +23,6 @@
         <behavior name="timestampable"/>
         <behavior name="i18n">
             <parameter name="i18n_columns" value="description"/>
-        </behavior>
-        <behavior name="versionable">
-            <parameter name="log_created_at" value="true"/>
-            <parameter name="log_created_by" value="true"/>
         </behavior>
     </table>
 
@@ -48,10 +40,6 @@
         </foreign-key>
 
         <behavior name="timestampable"/>
-        <behavior name="versionable">
-            <parameter name="log_created_at" value="true"/>
-            <parameter name="log_created_by" value="true"/>
-        </behavior>
     </table>
 
     <table name="person_image" namespace="Team\Model">
@@ -81,10 +69,6 @@
         <behavior name="i18n">
             <parameter name="i18n_columns" value="title, description, chapo, postscriptum" />
         </behavior>
-        <behavior name="versionable">
-            <parameter name="log_created_at" value="true"/>
-            <parameter name="log_created_by" value="true"/>
-        </behavior>
     </table>
 
     <table name="person_function" namespace="Team\Model">
@@ -95,10 +79,6 @@
         <behavior name="timestampable"/>
         <behavior name="i18n">
             <parameter name="i18n_columns" value="label"/>
-        </behavior>
-        <behavior name="versionable">
-            <parameter name="log_created_at" value="true"/>
-            <parameter name="log_created_by" value="true"/>
         </behavior>
     </table>
 
@@ -116,10 +96,6 @@
         </foreign-key>
 
         <behavior name="timestampable"/>
-        <behavior name="versionable">
-            <parameter name="log_created_at" value="true"/>
-            <parameter name="log_created_by" value="true"/>
-        </behavior>
     </table>
 
 </database>

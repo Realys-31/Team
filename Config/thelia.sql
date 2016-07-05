@@ -14,9 +14,6 @@ CREATE TABLE `team`
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `created_at` DATETIME,
     `updated_at` DATETIME,
-    `version` INTEGER DEFAULT 0,
-    `version_created_at` DATETIME,
-    `version_created_by` VARCHAR(100),
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB;
 
@@ -33,9 +30,6 @@ CREATE TABLE `person`
     `last_name` VARCHAR(255),
     `created_at` DATETIME,
     `updated_at` DATETIME,
-    `version` INTEGER DEFAULT 0,
-    `version_created_at` DATETIME,
-    `version_created_by` VARCHAR(100),
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB;
 
@@ -52,9 +46,6 @@ CREATE TABLE `person_team_link`
     `team_id` INTEGER NOT NULL,
     `created_at` DATETIME,
     `updated_at` DATETIME,
-    `version` INTEGER DEFAULT 0,
-    `version_created_at` DATETIME,
-    `version_created_by` VARCHAR(100),
     PRIMARY KEY (`id`),
     INDEX `FI_person_team_link_person_id` (`person_id`),
     INDEX `FI_person_team_link_team_id` (`team_id`),
@@ -83,9 +74,6 @@ CREATE TABLE `person_image`
     `position` INTEGER,
     `created_at` DATETIME,
     `updated_at` DATETIME,
-    `version` INTEGER DEFAULT 0,
-    `version_created_at` DATETIME,
-    `version_created_by` VARCHAR(100),
     PRIMARY KEY (`id`),
     INDEX `idx_person_image_person_id` (`person_id`),
     INDEX `idx_person_image_person_id_position` (`person_id`, `position`),
@@ -107,9 +95,6 @@ CREATE TABLE `person_function`
     `code` VARCHAR(255),
     `created_at` DATETIME,
     `updated_at` DATETIME,
-    `version` INTEGER DEFAULT 0,
-    `version_created_at` DATETIME,
-    `version_created_by` VARCHAR(100),
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB;
 
@@ -126,9 +111,6 @@ CREATE TABLE `person_function_link`
     `function_id` INTEGER NOT NULL,
     `created_at` DATETIME,
     `updated_at` DATETIME,
-    `version` INTEGER DEFAULT 0,
-    `version_created_at` DATETIME,
-    `version_created_by` VARCHAR(100),
     PRIMARY KEY (`id`),
     INDEX `FI_person_function_link_person_id` (`person_id`),
     INDEX `FI_person_function_link_function_id` (`function_id`),
@@ -215,158 +197,6 @@ CREATE TABLE `person_function_i18n`
     CONSTRAINT `person_function_i18n_FK_1`
         FOREIGN KEY (`id`)
         REFERENCES `person_function` (`id`)
-        ON DELETE CASCADE
-) ENGINE=InnoDB;
-
--- ---------------------------------------------------------------------
--- team_version
--- ---------------------------------------------------------------------
-
-DROP TABLE IF EXISTS `team_version`;
-
-CREATE TABLE `team_version`
-(
-    `id` INTEGER NOT NULL,
-    `created_at` DATETIME,
-    `updated_at` DATETIME,
-    `version` INTEGER DEFAULT 0 NOT NULL,
-    `version_created_at` DATETIME,
-    `version_created_by` VARCHAR(100),
-    `person_team_link_ids` TEXT,
-    `person_team_link_versions` TEXT,
-    PRIMARY KEY (`id`,`version`),
-    CONSTRAINT `team_version_FK_1`
-        FOREIGN KEY (`id`)
-        REFERENCES `team` (`id`)
-        ON DELETE CASCADE
-) ENGINE=InnoDB;
-
--- ---------------------------------------------------------------------
--- person_version
--- ---------------------------------------------------------------------
-
-DROP TABLE IF EXISTS `person_version`;
-
-CREATE TABLE `person_version`
-(
-    `id` INTEGER NOT NULL,
-    `first_name` VARCHAR(255),
-    `last_name` VARCHAR(255),
-    `created_at` DATETIME,
-    `updated_at` DATETIME,
-    `version` INTEGER DEFAULT 0 NOT NULL,
-    `version_created_at` DATETIME,
-    `version_created_by` VARCHAR(100),
-    `person_team_link_ids` TEXT,
-    `person_team_link_versions` TEXT,
-    `person_image_ids` TEXT,
-    `person_image_versions` TEXT,
-    `person_function_link_ids` TEXT,
-    `person_function_link_versions` TEXT,
-    PRIMARY KEY (`id`,`version`),
-    CONSTRAINT `person_version_FK_1`
-        FOREIGN KEY (`id`)
-        REFERENCES `person` (`id`)
-        ON DELETE CASCADE
-) ENGINE=InnoDB;
-
--- ---------------------------------------------------------------------
--- person_team_link_version
--- ---------------------------------------------------------------------
-
-DROP TABLE IF EXISTS `person_team_link_version`;
-
-CREATE TABLE `person_team_link_version`
-(
-    `id` INTEGER NOT NULL,
-    `person_id` INTEGER NOT NULL,
-    `team_id` INTEGER NOT NULL,
-    `created_at` DATETIME,
-    `updated_at` DATETIME,
-    `version` INTEGER DEFAULT 0 NOT NULL,
-    `version_created_at` DATETIME,
-    `version_created_by` VARCHAR(100),
-    `person_id_version` INTEGER DEFAULT 0,
-    `team_id_version` INTEGER DEFAULT 0,
-    PRIMARY KEY (`id`,`version`),
-    CONSTRAINT `person_team_link_version_FK_1`
-        FOREIGN KEY (`id`)
-        REFERENCES `person_team_link` (`id`)
-        ON DELETE CASCADE
-) ENGINE=InnoDB;
-
--- ---------------------------------------------------------------------
--- person_image_version
--- ---------------------------------------------------------------------
-
-DROP TABLE IF EXISTS `person_image_version`;
-
-CREATE TABLE `person_image_version`
-(
-    `id` INTEGER NOT NULL,
-    `file` VARCHAR(255),
-    `person_id` INTEGER NOT NULL,
-    `visible` TINYINT DEFAULT 1 NOT NULL,
-    `position` INTEGER,
-    `created_at` DATETIME,
-    `updated_at` DATETIME,
-    `version` INTEGER DEFAULT 0 NOT NULL,
-    `version_created_at` DATETIME,
-    `version_created_by` VARCHAR(100),
-    `person_id_version` INTEGER DEFAULT 0,
-    PRIMARY KEY (`id`,`version`),
-    CONSTRAINT `person_image_version_FK_1`
-        FOREIGN KEY (`id`)
-        REFERENCES `person_image` (`id`)
-        ON DELETE CASCADE
-) ENGINE=InnoDB;
-
--- ---------------------------------------------------------------------
--- person_function_version
--- ---------------------------------------------------------------------
-
-DROP TABLE IF EXISTS `person_function_version`;
-
-CREATE TABLE `person_function_version`
-(
-    `id` INTEGER NOT NULL,
-    `code` VARCHAR(255),
-    `created_at` DATETIME,
-    `updated_at` DATETIME,
-    `version` INTEGER DEFAULT 0 NOT NULL,
-    `version_created_at` DATETIME,
-    `version_created_by` VARCHAR(100),
-    `person_function_link_ids` TEXT,
-    `person_function_link_versions` TEXT,
-    PRIMARY KEY (`id`,`version`),
-    CONSTRAINT `person_function_version_FK_1`
-        FOREIGN KEY (`id`)
-        REFERENCES `person_function` (`id`)
-        ON DELETE CASCADE
-) ENGINE=InnoDB;
-
--- ---------------------------------------------------------------------
--- person_function_link_version
--- ---------------------------------------------------------------------
-
-DROP TABLE IF EXISTS `person_function_link_version`;
-
-CREATE TABLE `person_function_link_version`
-(
-    `id` INTEGER NOT NULL,
-    `person_id` INTEGER NOT NULL,
-    `function_id` INTEGER NOT NULL,
-    `created_at` DATETIME,
-    `updated_at` DATETIME,
-    `version` INTEGER DEFAULT 0 NOT NULL,
-    `version_created_at` DATETIME,
-    `version_created_by` VARCHAR(100),
-    `person_id_version` INTEGER DEFAULT 0,
-    `function_id_version` INTEGER DEFAULT 0,
-    PRIMARY KEY (`id`,`version`),
-    CONSTRAINT `person_function_link_version_FK_1`
-        FOREIGN KEY (`id`)
-        REFERENCES `person_function_link` (`id`)
         ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
