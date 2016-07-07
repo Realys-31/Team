@@ -150,15 +150,15 @@ class PersonService extends AbstractBaseService implements BaseServiceInterface
         }
 
         // Require Field
-        if (isset($data['first_name'])) {
+        if (array_key_exists('first_name', $data)) {
             $model->setFirstName($data['first_name']);
         }
-        if (isset($data['last_name'])) {
+        if (array_key_exists('last_name', $data)) {
             $model->setLastName($data['last_name']);
         }
 
         //  Optionnal Field
-        if (isset($data['description'])) {
+        if (array_key_exists('description', $data)) {
             $model->setDescription($data['description']);
         }
 
