@@ -58,7 +58,7 @@ class PersonImageTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 10;
+    const NUM_COLUMNS = 7;
 
     /**
      * The number of lazy-loaded columns
@@ -68,7 +68,7 @@ class PersonImageTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 10;
+    const NUM_HYDRATE_COLUMNS = 7;
 
     /**
      * the column name for the ID field
@@ -106,21 +106,6 @@ class PersonImageTableMap extends TableMap
     const UPDATED_AT = 'person_image.UPDATED_AT';
 
     /**
-     * the column name for the VERSION field
-     */
-    const VERSION = 'person_image.VERSION';
-
-    /**
-     * the column name for the VERSION_CREATED_AT field
-     */
-    const VERSION_CREATED_AT = 'person_image.VERSION_CREATED_AT';
-
-    /**
-     * the column name for the VERSION_CREATED_BY field
-     */
-    const VERSION_CREATED_BY = 'person_image.VERSION_CREATED_BY';
-
-    /**
      * The default string format for model objects of the related table
      */
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -141,12 +126,12 @@ class PersonImageTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'File', 'PersonId', 'Visible', 'Position', 'CreatedAt', 'UpdatedAt', 'Version', 'VersionCreatedAt', 'VersionCreatedBy', ),
-        self::TYPE_STUDLYPHPNAME => array('id', 'file', 'personId', 'visible', 'position', 'createdAt', 'updatedAt', 'version', 'versionCreatedAt', 'versionCreatedBy', ),
-        self::TYPE_COLNAME       => array(PersonImageTableMap::ID, PersonImageTableMap::FILE, PersonImageTableMap::PERSON_ID, PersonImageTableMap::VISIBLE, PersonImageTableMap::POSITION, PersonImageTableMap::CREATED_AT, PersonImageTableMap::UPDATED_AT, PersonImageTableMap::VERSION, PersonImageTableMap::VERSION_CREATED_AT, PersonImageTableMap::VERSION_CREATED_BY, ),
-        self::TYPE_RAW_COLNAME   => array('ID', 'FILE', 'PERSON_ID', 'VISIBLE', 'POSITION', 'CREATED_AT', 'UPDATED_AT', 'VERSION', 'VERSION_CREATED_AT', 'VERSION_CREATED_BY', ),
-        self::TYPE_FIELDNAME     => array('id', 'file', 'person_id', 'visible', 'position', 'created_at', 'updated_at', 'version', 'version_created_at', 'version_created_by', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, )
+        self::TYPE_PHPNAME       => array('Id', 'File', 'PersonId', 'Visible', 'Position', 'CreatedAt', 'UpdatedAt', ),
+        self::TYPE_STUDLYPHPNAME => array('id', 'file', 'personId', 'visible', 'position', 'createdAt', 'updatedAt', ),
+        self::TYPE_COLNAME       => array(PersonImageTableMap::ID, PersonImageTableMap::FILE, PersonImageTableMap::PERSON_ID, PersonImageTableMap::VISIBLE, PersonImageTableMap::POSITION, PersonImageTableMap::CREATED_AT, PersonImageTableMap::UPDATED_AT, ),
+        self::TYPE_RAW_COLNAME   => array('ID', 'FILE', 'PERSON_ID', 'VISIBLE', 'POSITION', 'CREATED_AT', 'UPDATED_AT', ),
+        self::TYPE_FIELDNAME     => array('id', 'file', 'person_id', 'visible', 'position', 'created_at', 'updated_at', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, )
     );
 
     /**
@@ -156,12 +141,12 @@ class PersonImageTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'File' => 1, 'PersonId' => 2, 'Visible' => 3, 'Position' => 4, 'CreatedAt' => 5, 'UpdatedAt' => 6, 'Version' => 7, 'VersionCreatedAt' => 8, 'VersionCreatedBy' => 9, ),
-        self::TYPE_STUDLYPHPNAME => array('id' => 0, 'file' => 1, 'personId' => 2, 'visible' => 3, 'position' => 4, 'createdAt' => 5, 'updatedAt' => 6, 'version' => 7, 'versionCreatedAt' => 8, 'versionCreatedBy' => 9, ),
-        self::TYPE_COLNAME       => array(PersonImageTableMap::ID => 0, PersonImageTableMap::FILE => 1, PersonImageTableMap::PERSON_ID => 2, PersonImageTableMap::VISIBLE => 3, PersonImageTableMap::POSITION => 4, PersonImageTableMap::CREATED_AT => 5, PersonImageTableMap::UPDATED_AT => 6, PersonImageTableMap::VERSION => 7, PersonImageTableMap::VERSION_CREATED_AT => 8, PersonImageTableMap::VERSION_CREATED_BY => 9, ),
-        self::TYPE_RAW_COLNAME   => array('ID' => 0, 'FILE' => 1, 'PERSON_ID' => 2, 'VISIBLE' => 3, 'POSITION' => 4, 'CREATED_AT' => 5, 'UPDATED_AT' => 6, 'VERSION' => 7, 'VERSION_CREATED_AT' => 8, 'VERSION_CREATED_BY' => 9, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'file' => 1, 'person_id' => 2, 'visible' => 3, 'position' => 4, 'created_at' => 5, 'updated_at' => 6, 'version' => 7, 'version_created_at' => 8, 'version_created_by' => 9, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'File' => 1, 'PersonId' => 2, 'Visible' => 3, 'Position' => 4, 'CreatedAt' => 5, 'UpdatedAt' => 6, ),
+        self::TYPE_STUDLYPHPNAME => array('id' => 0, 'file' => 1, 'personId' => 2, 'visible' => 3, 'position' => 4, 'createdAt' => 5, 'updatedAt' => 6, ),
+        self::TYPE_COLNAME       => array(PersonImageTableMap::ID => 0, PersonImageTableMap::FILE => 1, PersonImageTableMap::PERSON_ID => 2, PersonImageTableMap::VISIBLE => 3, PersonImageTableMap::POSITION => 4, PersonImageTableMap::CREATED_AT => 5, PersonImageTableMap::UPDATED_AT => 6, ),
+        self::TYPE_RAW_COLNAME   => array('ID' => 0, 'FILE' => 1, 'PERSON_ID' => 2, 'VISIBLE' => 3, 'POSITION' => 4, 'CREATED_AT' => 5, 'UPDATED_AT' => 6, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'file' => 1, 'person_id' => 2, 'visible' => 3, 'position' => 4, 'created_at' => 5, 'updated_at' => 6, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, )
     );
 
     /**
@@ -187,9 +172,6 @@ class PersonImageTableMap extends TableMap
         $this->addColumn('POSITION', 'Position', 'INTEGER', false, null, null);
         $this->addColumn('CREATED_AT', 'CreatedAt', 'TIMESTAMP', false, null, null);
         $this->addColumn('UPDATED_AT', 'UpdatedAt', 'TIMESTAMP', false, null, null);
-        $this->addColumn('VERSION', 'Version', 'INTEGER', false, null, 0);
-        $this->addColumn('VERSION_CREATED_AT', 'VersionCreatedAt', 'TIMESTAMP', false, null, null);
-        $this->addColumn('VERSION_CREATED_BY', 'VersionCreatedBy', 'VARCHAR', false, 100, null);
     } // initialize()
 
     /**
@@ -199,7 +181,6 @@ class PersonImageTableMap extends TableMap
     {
         $this->addRelation('Person', '\\Team\\Model\\Person', RelationMap::MANY_TO_ONE, array('person_id' => 'id', ), 'CASCADE', null);
         $this->addRelation('PersonImageI18n', '\\Team\\Model\\PersonImageI18n', RelationMap::ONE_TO_MANY, array('id' => 'id', ), 'CASCADE', null, 'PersonImageI18ns');
-        $this->addRelation('PersonImageVersion', '\\Team\\Model\\PersonImageVersion', RelationMap::ONE_TO_MANY, array('id' => 'id', ), 'CASCADE', null, 'PersonImageVersions');
     } // buildRelations()
 
     /**
@@ -213,7 +194,6 @@ class PersonImageTableMap extends TableMap
         return array(
             'timestampable' => array('create_column' => 'created_at', 'update_column' => 'updated_at', ),
             'i18n' => array('i18n_table' => '%TABLE%_i18n', 'i18n_phpname' => '%PHPNAME%I18n', 'i18n_columns' => 'title, description, chapo, postscriptum', 'locale_column' => 'locale', 'locale_length' => '5', 'default_locale' => '', 'locale_alias' => '', ),
-            'versionable' => array('version_column' => 'version', 'version_table' => '', 'log_created_at' => 'true', 'log_created_by' => 'true', 'log_comment' => 'false', 'version_created_at_column' => 'version_created_at', 'version_created_by_column' => 'version_created_by', 'version_comment_column' => 'version_comment', ),
         );
     } // getBehaviors()
     /**
@@ -224,7 +204,6 @@ class PersonImageTableMap extends TableMap
         // Invalidate objects in ".$this->getClassNameFromBuilder($joinedTableTableMapBuilder)." instance pool,
         // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
                 PersonImageI18nTableMap::clearInstancePool();
-                PersonImageVersionTableMap::clearInstancePool();
             }
 
     /**
@@ -372,9 +351,6 @@ class PersonImageTableMap extends TableMap
             $criteria->addSelectColumn(PersonImageTableMap::POSITION);
             $criteria->addSelectColumn(PersonImageTableMap::CREATED_AT);
             $criteria->addSelectColumn(PersonImageTableMap::UPDATED_AT);
-            $criteria->addSelectColumn(PersonImageTableMap::VERSION);
-            $criteria->addSelectColumn(PersonImageTableMap::VERSION_CREATED_AT);
-            $criteria->addSelectColumn(PersonImageTableMap::VERSION_CREATED_BY);
         } else {
             $criteria->addSelectColumn($alias . '.ID');
             $criteria->addSelectColumn($alias . '.FILE');
@@ -383,9 +359,6 @@ class PersonImageTableMap extends TableMap
             $criteria->addSelectColumn($alias . '.POSITION');
             $criteria->addSelectColumn($alias . '.CREATED_AT');
             $criteria->addSelectColumn($alias . '.UPDATED_AT');
-            $criteria->addSelectColumn($alias . '.VERSION');
-            $criteria->addSelectColumn($alias . '.VERSION_CREATED_AT');
-            $criteria->addSelectColumn($alias . '.VERSION_CREATED_BY');
         }
     }
 

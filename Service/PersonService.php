@@ -51,37 +51,8 @@ class PersonService extends AbstractBaseService implements BaseServiceInterface
 
     protected function updateProcess(Event $event)
     {
-        /**
-         * @var PersonEvent $event
-         * @var Person $person
-         */
-        $person = $event->getPerson();
-
-        $existingPersonQuery = PersonQuery::create()
-            ->filterById($person->getId())
-            ->filterByLastName($person->getLastName())
-            ->filterByFirstName($person->getFirstName())
-        ;
-
-        if (null === $existingPersonQuery->findOne()) {
-            $person->save();
-        // to avoid infinite loops due to model, we need to register by hand the new person description if it has been changed
-        } elseif (
-            null === $existingPersonQuery
-                ->usePersonI18nQuery()
-                    ->filterByLocale($person->getLocale())
-                    ->filterByDescription($person->getDescription())
-                ->endUse()
-                ->findOne()
-        ) {
-            PersonI18nQuery::create()
-                ->filterByLocale($person->getLocale())
-                ->filterById($person->getId())
-                ->findOne()
-                ->setDescription($person->getDescription())
-                ->save()
-            ;
-        }
+        /** @var PersonEvent $event */
+        $event->getPerson()->save();
     }
 
     protected function deleteProcess(Event $event)

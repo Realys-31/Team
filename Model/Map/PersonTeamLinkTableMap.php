@@ -58,7 +58,7 @@ class PersonTeamLinkTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 8;
+    const NUM_COLUMNS = 5;
 
     /**
      * The number of lazy-loaded columns
@@ -68,7 +68,7 @@ class PersonTeamLinkTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 8;
+    const NUM_HYDRATE_COLUMNS = 5;
 
     /**
      * the column name for the ID field
@@ -96,21 +96,6 @@ class PersonTeamLinkTableMap extends TableMap
     const UPDATED_AT = 'person_team_link.UPDATED_AT';
 
     /**
-     * the column name for the VERSION field
-     */
-    const VERSION = 'person_team_link.VERSION';
-
-    /**
-     * the column name for the VERSION_CREATED_AT field
-     */
-    const VERSION_CREATED_AT = 'person_team_link.VERSION_CREATED_AT';
-
-    /**
-     * the column name for the VERSION_CREATED_BY field
-     */
-    const VERSION_CREATED_BY = 'person_team_link.VERSION_CREATED_BY';
-
-    /**
      * The default string format for model objects of the related table
      */
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -122,12 +107,12 @@ class PersonTeamLinkTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'PersonId', 'TeamId', 'CreatedAt', 'UpdatedAt', 'Version', 'VersionCreatedAt', 'VersionCreatedBy', ),
-        self::TYPE_STUDLYPHPNAME => array('id', 'personId', 'teamId', 'createdAt', 'updatedAt', 'version', 'versionCreatedAt', 'versionCreatedBy', ),
-        self::TYPE_COLNAME       => array(PersonTeamLinkTableMap::ID, PersonTeamLinkTableMap::PERSON_ID, PersonTeamLinkTableMap::TEAM_ID, PersonTeamLinkTableMap::CREATED_AT, PersonTeamLinkTableMap::UPDATED_AT, PersonTeamLinkTableMap::VERSION, PersonTeamLinkTableMap::VERSION_CREATED_AT, PersonTeamLinkTableMap::VERSION_CREATED_BY, ),
-        self::TYPE_RAW_COLNAME   => array('ID', 'PERSON_ID', 'TEAM_ID', 'CREATED_AT', 'UPDATED_AT', 'VERSION', 'VERSION_CREATED_AT', 'VERSION_CREATED_BY', ),
-        self::TYPE_FIELDNAME     => array('id', 'person_id', 'team_id', 'created_at', 'updated_at', 'version', 'version_created_at', 'version_created_by', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, )
+        self::TYPE_PHPNAME       => array('Id', 'PersonId', 'TeamId', 'CreatedAt', 'UpdatedAt', ),
+        self::TYPE_STUDLYPHPNAME => array('id', 'personId', 'teamId', 'createdAt', 'updatedAt', ),
+        self::TYPE_COLNAME       => array(PersonTeamLinkTableMap::ID, PersonTeamLinkTableMap::PERSON_ID, PersonTeamLinkTableMap::TEAM_ID, PersonTeamLinkTableMap::CREATED_AT, PersonTeamLinkTableMap::UPDATED_AT, ),
+        self::TYPE_RAW_COLNAME   => array('ID', 'PERSON_ID', 'TEAM_ID', 'CREATED_AT', 'UPDATED_AT', ),
+        self::TYPE_FIELDNAME     => array('id', 'person_id', 'team_id', 'created_at', 'updated_at', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, )
     );
 
     /**
@@ -137,12 +122,12 @@ class PersonTeamLinkTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'PersonId' => 1, 'TeamId' => 2, 'CreatedAt' => 3, 'UpdatedAt' => 4, 'Version' => 5, 'VersionCreatedAt' => 6, 'VersionCreatedBy' => 7, ),
-        self::TYPE_STUDLYPHPNAME => array('id' => 0, 'personId' => 1, 'teamId' => 2, 'createdAt' => 3, 'updatedAt' => 4, 'version' => 5, 'versionCreatedAt' => 6, 'versionCreatedBy' => 7, ),
-        self::TYPE_COLNAME       => array(PersonTeamLinkTableMap::ID => 0, PersonTeamLinkTableMap::PERSON_ID => 1, PersonTeamLinkTableMap::TEAM_ID => 2, PersonTeamLinkTableMap::CREATED_AT => 3, PersonTeamLinkTableMap::UPDATED_AT => 4, PersonTeamLinkTableMap::VERSION => 5, PersonTeamLinkTableMap::VERSION_CREATED_AT => 6, PersonTeamLinkTableMap::VERSION_CREATED_BY => 7, ),
-        self::TYPE_RAW_COLNAME   => array('ID' => 0, 'PERSON_ID' => 1, 'TEAM_ID' => 2, 'CREATED_AT' => 3, 'UPDATED_AT' => 4, 'VERSION' => 5, 'VERSION_CREATED_AT' => 6, 'VERSION_CREATED_BY' => 7, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'person_id' => 1, 'team_id' => 2, 'created_at' => 3, 'updated_at' => 4, 'version' => 5, 'version_created_at' => 6, 'version_created_by' => 7, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'PersonId' => 1, 'TeamId' => 2, 'CreatedAt' => 3, 'UpdatedAt' => 4, ),
+        self::TYPE_STUDLYPHPNAME => array('id' => 0, 'personId' => 1, 'teamId' => 2, 'createdAt' => 3, 'updatedAt' => 4, ),
+        self::TYPE_COLNAME       => array(PersonTeamLinkTableMap::ID => 0, PersonTeamLinkTableMap::PERSON_ID => 1, PersonTeamLinkTableMap::TEAM_ID => 2, PersonTeamLinkTableMap::CREATED_AT => 3, PersonTeamLinkTableMap::UPDATED_AT => 4, ),
+        self::TYPE_RAW_COLNAME   => array('ID' => 0, 'PERSON_ID' => 1, 'TEAM_ID' => 2, 'CREATED_AT' => 3, 'UPDATED_AT' => 4, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'person_id' => 1, 'team_id' => 2, 'created_at' => 3, 'updated_at' => 4, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, )
     );
 
     /**
@@ -166,9 +151,6 @@ class PersonTeamLinkTableMap extends TableMap
         $this->addForeignKey('TEAM_ID', 'TeamId', 'INTEGER', 'team', 'ID', true, null, null);
         $this->addColumn('CREATED_AT', 'CreatedAt', 'TIMESTAMP', false, null, null);
         $this->addColumn('UPDATED_AT', 'UpdatedAt', 'TIMESTAMP', false, null, null);
-        $this->addColumn('VERSION', 'Version', 'INTEGER', false, null, 0);
-        $this->addColumn('VERSION_CREATED_AT', 'VersionCreatedAt', 'TIMESTAMP', false, null, null);
-        $this->addColumn('VERSION_CREATED_BY', 'VersionCreatedBy', 'VARCHAR', false, 100, null);
     } // initialize()
 
     /**
@@ -178,7 +160,6 @@ class PersonTeamLinkTableMap extends TableMap
     {
         $this->addRelation('Person', '\\Team\\Model\\Person', RelationMap::MANY_TO_ONE, array('person_id' => 'id', ), 'CASCADE', null);
         $this->addRelation('Team', '\\Team\\Model\\Team', RelationMap::MANY_TO_ONE, array('team_id' => 'id', ), 'CASCADE', null);
-        $this->addRelation('PersonTeamLinkVersion', '\\Team\\Model\\PersonTeamLinkVersion', RelationMap::ONE_TO_MANY, array('id' => 'id', ), 'CASCADE', null, 'PersonTeamLinkVersions');
     } // buildRelations()
 
     /**
@@ -191,18 +172,8 @@ class PersonTeamLinkTableMap extends TableMap
     {
         return array(
             'timestampable' => array('create_column' => 'created_at', 'update_column' => 'updated_at', ),
-            'versionable' => array('version_column' => 'version', 'version_table' => '', 'log_created_at' => 'true', 'log_created_by' => 'true', 'log_comment' => 'false', 'version_created_at_column' => 'version_created_at', 'version_created_by_column' => 'version_created_by', 'version_comment_column' => 'version_comment', ),
         );
     } // getBehaviors()
-    /**
-     * Method to invalidate the instance pool of all tables related to person_team_link     * by a foreign key with ON DELETE CASCADE
-     */
-    public static function clearRelatedInstancePool()
-    {
-        // Invalidate objects in ".$this->getClassNameFromBuilder($joinedTableTableMapBuilder)." instance pool,
-        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-                PersonTeamLinkVersionTableMap::clearInstancePool();
-            }
 
     /**
      * Retrieves a string version of the primary key from the DB resultset row that can be used to uniquely identify a row in this table.
@@ -347,18 +318,12 @@ class PersonTeamLinkTableMap extends TableMap
             $criteria->addSelectColumn(PersonTeamLinkTableMap::TEAM_ID);
             $criteria->addSelectColumn(PersonTeamLinkTableMap::CREATED_AT);
             $criteria->addSelectColumn(PersonTeamLinkTableMap::UPDATED_AT);
-            $criteria->addSelectColumn(PersonTeamLinkTableMap::VERSION);
-            $criteria->addSelectColumn(PersonTeamLinkTableMap::VERSION_CREATED_AT);
-            $criteria->addSelectColumn(PersonTeamLinkTableMap::VERSION_CREATED_BY);
         } else {
             $criteria->addSelectColumn($alias . '.ID');
             $criteria->addSelectColumn($alias . '.PERSON_ID');
             $criteria->addSelectColumn($alias . '.TEAM_ID');
             $criteria->addSelectColumn($alias . '.CREATED_AT');
             $criteria->addSelectColumn($alias . '.UPDATED_AT');
-            $criteria->addSelectColumn($alias . '.VERSION');
-            $criteria->addSelectColumn($alias . '.VERSION_CREATED_AT');
-            $criteria->addSelectColumn($alias . '.VERSION_CREATED_BY');
         }
     }
 

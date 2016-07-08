@@ -58,7 +58,7 @@ class TeamTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 6;
+    const NUM_COLUMNS = 3;
 
     /**
      * The number of lazy-loaded columns
@@ -68,7 +68,7 @@ class TeamTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 6;
+    const NUM_HYDRATE_COLUMNS = 3;
 
     /**
      * the column name for the ID field
@@ -84,21 +84,6 @@ class TeamTableMap extends TableMap
      * the column name for the UPDATED_AT field
      */
     const UPDATED_AT = 'team.UPDATED_AT';
-
-    /**
-     * the column name for the VERSION field
-     */
-    const VERSION = 'team.VERSION';
-
-    /**
-     * the column name for the VERSION_CREATED_AT field
-     */
-    const VERSION_CREATED_AT = 'team.VERSION_CREATED_AT';
-
-    /**
-     * the column name for the VERSION_CREATED_BY field
-     */
-    const VERSION_CREATED_BY = 'team.VERSION_CREATED_BY';
 
     /**
      * The default string format for model objects of the related table
@@ -121,12 +106,12 @@ class TeamTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'CreatedAt', 'UpdatedAt', 'Version', 'VersionCreatedAt', 'VersionCreatedBy', ),
-        self::TYPE_STUDLYPHPNAME => array('id', 'createdAt', 'updatedAt', 'version', 'versionCreatedAt', 'versionCreatedBy', ),
-        self::TYPE_COLNAME       => array(TeamTableMap::ID, TeamTableMap::CREATED_AT, TeamTableMap::UPDATED_AT, TeamTableMap::VERSION, TeamTableMap::VERSION_CREATED_AT, TeamTableMap::VERSION_CREATED_BY, ),
-        self::TYPE_RAW_COLNAME   => array('ID', 'CREATED_AT', 'UPDATED_AT', 'VERSION', 'VERSION_CREATED_AT', 'VERSION_CREATED_BY', ),
-        self::TYPE_FIELDNAME     => array('id', 'created_at', 'updated_at', 'version', 'version_created_at', 'version_created_by', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, )
+        self::TYPE_PHPNAME       => array('Id', 'CreatedAt', 'UpdatedAt', ),
+        self::TYPE_STUDLYPHPNAME => array('id', 'createdAt', 'updatedAt', ),
+        self::TYPE_COLNAME       => array(TeamTableMap::ID, TeamTableMap::CREATED_AT, TeamTableMap::UPDATED_AT, ),
+        self::TYPE_RAW_COLNAME   => array('ID', 'CREATED_AT', 'UPDATED_AT', ),
+        self::TYPE_FIELDNAME     => array('id', 'created_at', 'updated_at', ),
+        self::TYPE_NUM           => array(0, 1, 2, )
     );
 
     /**
@@ -136,12 +121,12 @@ class TeamTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'CreatedAt' => 1, 'UpdatedAt' => 2, 'Version' => 3, 'VersionCreatedAt' => 4, 'VersionCreatedBy' => 5, ),
-        self::TYPE_STUDLYPHPNAME => array('id' => 0, 'createdAt' => 1, 'updatedAt' => 2, 'version' => 3, 'versionCreatedAt' => 4, 'versionCreatedBy' => 5, ),
-        self::TYPE_COLNAME       => array(TeamTableMap::ID => 0, TeamTableMap::CREATED_AT => 1, TeamTableMap::UPDATED_AT => 2, TeamTableMap::VERSION => 3, TeamTableMap::VERSION_CREATED_AT => 4, TeamTableMap::VERSION_CREATED_BY => 5, ),
-        self::TYPE_RAW_COLNAME   => array('ID' => 0, 'CREATED_AT' => 1, 'UPDATED_AT' => 2, 'VERSION' => 3, 'VERSION_CREATED_AT' => 4, 'VERSION_CREATED_BY' => 5, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'created_at' => 1, 'updated_at' => 2, 'version' => 3, 'version_created_at' => 4, 'version_created_by' => 5, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'CreatedAt' => 1, 'UpdatedAt' => 2, ),
+        self::TYPE_STUDLYPHPNAME => array('id' => 0, 'createdAt' => 1, 'updatedAt' => 2, ),
+        self::TYPE_COLNAME       => array(TeamTableMap::ID => 0, TeamTableMap::CREATED_AT => 1, TeamTableMap::UPDATED_AT => 2, ),
+        self::TYPE_RAW_COLNAME   => array('ID' => 0, 'CREATED_AT' => 1, 'UPDATED_AT' => 2, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'created_at' => 1, 'updated_at' => 2, ),
+        self::TYPE_NUM           => array(0, 1, 2, )
     );
 
     /**
@@ -163,9 +148,6 @@ class TeamTableMap extends TableMap
         $this->addPrimaryKey('ID', 'Id', 'INTEGER', true, null, null);
         $this->addColumn('CREATED_AT', 'CreatedAt', 'TIMESTAMP', false, null, null);
         $this->addColumn('UPDATED_AT', 'UpdatedAt', 'TIMESTAMP', false, null, null);
-        $this->addColumn('VERSION', 'Version', 'INTEGER', false, null, 0);
-        $this->addColumn('VERSION_CREATED_AT', 'VersionCreatedAt', 'TIMESTAMP', false, null, null);
-        $this->addColumn('VERSION_CREATED_BY', 'VersionCreatedBy', 'VARCHAR', false, 100, null);
     } // initialize()
 
     /**
@@ -175,7 +157,6 @@ class TeamTableMap extends TableMap
     {
         $this->addRelation('PersonTeamLink', '\\Team\\Model\\PersonTeamLink', RelationMap::ONE_TO_MANY, array('id' => 'team_id', ), 'CASCADE', null, 'PersonTeamLinks');
         $this->addRelation('TeamI18n', '\\Team\\Model\\TeamI18n', RelationMap::ONE_TO_MANY, array('id' => 'id', ), 'CASCADE', null, 'TeamI18ns');
-        $this->addRelation('TeamVersion', '\\Team\\Model\\TeamVersion', RelationMap::ONE_TO_MANY, array('id' => 'id', ), 'CASCADE', null, 'TeamVersions');
     } // buildRelations()
 
     /**
@@ -189,7 +170,6 @@ class TeamTableMap extends TableMap
         return array(
             'timestampable' => array('create_column' => 'created_at', 'update_column' => 'updated_at', ),
             'i18n' => array('i18n_table' => '%TABLE%_i18n', 'i18n_phpname' => '%PHPNAME%I18n', 'i18n_columns' => 'title,description', 'locale_column' => 'locale', 'locale_length' => '5', 'default_locale' => '', 'locale_alias' => '', ),
-            'versionable' => array('version_column' => 'version', 'version_table' => '', 'log_created_at' => 'true', 'log_created_by' => 'true', 'log_comment' => 'false', 'version_created_at_column' => 'version_created_at', 'version_created_by_column' => 'version_created_by', 'version_comment_column' => 'version_comment', ),
         );
     } // getBehaviors()
     /**
@@ -201,7 +181,6 @@ class TeamTableMap extends TableMap
         // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
                 PersonTeamLinkTableMap::clearInstancePool();
                 TeamI18nTableMap::clearInstancePool();
-                TeamVersionTableMap::clearInstancePool();
             }
 
     /**
@@ -345,16 +324,10 @@ class TeamTableMap extends TableMap
             $criteria->addSelectColumn(TeamTableMap::ID);
             $criteria->addSelectColumn(TeamTableMap::CREATED_AT);
             $criteria->addSelectColumn(TeamTableMap::UPDATED_AT);
-            $criteria->addSelectColumn(TeamTableMap::VERSION);
-            $criteria->addSelectColumn(TeamTableMap::VERSION_CREATED_AT);
-            $criteria->addSelectColumn(TeamTableMap::VERSION_CREATED_BY);
         } else {
             $criteria->addSelectColumn($alias . '.ID');
             $criteria->addSelectColumn($alias . '.CREATED_AT');
             $criteria->addSelectColumn($alias . '.UPDATED_AT');
-            $criteria->addSelectColumn($alias . '.VERSION');
-            $criteria->addSelectColumn($alias . '.VERSION_CREATED_AT');
-            $criteria->addSelectColumn($alias . '.VERSION_CREATED_BY');
         }
     }
 

@@ -20,23 +20,14 @@ use Propel\Runtime\Util\PropelDateTime;
 use Team\Model\Person as ChildPerson;
 use Team\Model\PersonFunctionLink as ChildPersonFunctionLink;
 use Team\Model\PersonFunctionLinkQuery as ChildPersonFunctionLinkQuery;
-use Team\Model\PersonFunctionLinkVersionQuery as ChildPersonFunctionLinkVersionQuery;
 use Team\Model\PersonI18n as ChildPersonI18n;
 use Team\Model\PersonI18nQuery as ChildPersonI18nQuery;
 use Team\Model\PersonImage as ChildPersonImage;
 use Team\Model\PersonImageQuery as ChildPersonImageQuery;
-use Team\Model\PersonImageVersionQuery as ChildPersonImageVersionQuery;
 use Team\Model\PersonQuery as ChildPersonQuery;
 use Team\Model\PersonTeamLink as ChildPersonTeamLink;
 use Team\Model\PersonTeamLinkQuery as ChildPersonTeamLinkQuery;
-use Team\Model\PersonTeamLinkVersionQuery as ChildPersonTeamLinkVersionQuery;
-use Team\Model\PersonVersion as ChildPersonVersion;
-use Team\Model\PersonVersionQuery as ChildPersonVersionQuery;
-use Team\Model\Map\PersonFunctionLinkVersionTableMap;
-use Team\Model\Map\PersonImageVersionTableMap;
 use Team\Model\Map\PersonTableMap;
-use Team\Model\Map\PersonTeamLinkVersionTableMap;
-use Team\Model\Map\PersonVersionTableMap;
 
 abstract class Person implements ActiveRecordInterface
 {
@@ -103,25 +94,6 @@ abstract class Person implements ActiveRecordInterface
     protected $updated_at;
 
     /**
-     * The value for the version field.
-     * Note: this column has a database default value of: 0
-     * @var        int
-     */
-    protected $version;
-
-    /**
-     * The value for the version_created_at field.
-     * @var        string
-     */
-    protected $version_created_at;
-
-    /**
-     * The value for the version_created_by field.
-     * @var        string
-     */
-    protected $version_created_by;
-
-    /**
      * @var        ObjectCollection|ChildPersonTeamLink[] Collection to store aggregation of ChildPersonTeamLink objects.
      */
     protected $collPersonTeamLinks;
@@ -146,12 +118,6 @@ abstract class Person implements ActiveRecordInterface
     protected $collPersonI18nsPartial;
 
     /**
-     * @var        ObjectCollection|ChildPersonVersion[] Collection to store aggregation of ChildPersonVersion objects.
-     */
-    protected $collPersonVersions;
-    protected $collPersonVersionsPartial;
-
-    /**
      * Flag to prevent endless save loop, if this object is referenced
      * by another object which falls in this transaction.
      *
@@ -172,14 +138,6 @@ abstract class Person implements ActiveRecordInterface
      * @var        array[ChildPersonI18n]
      */
     protected $currentTranslations;
-
-    // versionable behavior
-
-
-    /**
-     * @var bool
-     */
-    protected $enforceVersion = false;
 
     /**
      * An array of objects scheduled for deletion.
@@ -206,29 +164,10 @@ abstract class Person implements ActiveRecordInterface
     protected $personI18nsScheduledForDeletion = null;
 
     /**
-     * An array of objects scheduled for deletion.
-     * @var ObjectCollection
-     */
-    protected $personVersionsScheduledForDeletion = null;
-
-    /**
-     * Applies default values to this object.
-     * This method should be called from the object's constructor (or
-     * equivalent initialization method).
-     * @see __construct()
-     */
-    public function applyDefaultValues()
-    {
-        $this->version = 0;
-    }
-
-    /**
      * Initializes internal state of Team\Model\Base\Person object.
-     * @see applyDefaults()
      */
     public function __construct()
     {
-        $this->applyDefaultValues();
     }
 
     /**
@@ -556,48 +495,6 @@ abstract class Person implements ActiveRecordInterface
     }
 
     /**
-     * Get the [version] column value.
-     *
-     * @return   int
-     */
-    public function getVersion()
-    {
-
-        return $this->version;
-    }
-
-    /**
-     * Get the [optionally formatted] temporal [version_created_at] column value.
-     *
-     *
-     * @param      string $format The date/time format string (either date()-style or strftime()-style).
-     *                            If format is NULL, then the raw \DateTime object will be returned.
-     *
-     * @return mixed Formatted date/time value as string or \DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
-     *
-     * @throws PropelException - if unable to parse/validate the date/time value.
-     */
-    public function getVersionCreatedAt($format = NULL)
-    {
-        if ($format === null) {
-            return $this->version_created_at;
-        } else {
-            return $this->version_created_at instanceof \DateTime ? $this->version_created_at->format($format) : null;
-        }
-    }
-
-    /**
-     * Get the [version_created_by] column value.
-     *
-     * @return   string
-     */
-    public function getVersionCreatedBy()
-    {
-
-        return $this->version_created_by;
-    }
-
-    /**
      * Set the value of [id] column.
      *
      * @param      int $v new value
@@ -703,69 +600,6 @@ abstract class Person implements ActiveRecordInterface
     } // setUpdatedAt()
 
     /**
-     * Set the value of [version] column.
-     *
-     * @param      int $v new value
-     * @return   \Team\Model\Person The current object (for fluent API support)
-     */
-    public function setVersion($v)
-    {
-        if ($v !== null) {
-            $v = (int) $v;
-        }
-
-        if ($this->version !== $v) {
-            $this->version = $v;
-            $this->modifiedColumns[PersonTableMap::VERSION] = true;
-        }
-
-
-        return $this;
-    } // setVersion()
-
-    /**
-     * Sets the value of [version_created_at] column to a normalized version of the date/time value specified.
-     *
-     * @param      mixed $v string, integer (timestamp), or \DateTime value.
-     *               Empty strings are treated as NULL.
-     * @return   \Team\Model\Person The current object (for fluent API support)
-     */
-    public function setVersionCreatedAt($v)
-    {
-        $dt = PropelDateTime::newInstance($v, null, '\DateTime');
-        if ($this->version_created_at !== null || $dt !== null) {
-            if ($dt !== $this->version_created_at) {
-                $this->version_created_at = $dt;
-                $this->modifiedColumns[PersonTableMap::VERSION_CREATED_AT] = true;
-            }
-        } // if either are not null
-
-
-        return $this;
-    } // setVersionCreatedAt()
-
-    /**
-     * Set the value of [version_created_by] column.
-     *
-     * @param      string $v new value
-     * @return   \Team\Model\Person The current object (for fluent API support)
-     */
-    public function setVersionCreatedBy($v)
-    {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->version_created_by !== $v) {
-            $this->version_created_by = $v;
-            $this->modifiedColumns[PersonTableMap::VERSION_CREATED_BY] = true;
-        }
-
-
-        return $this;
-    } // setVersionCreatedBy()
-
-    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -775,10 +609,6 @@ abstract class Person implements ActiveRecordInterface
      */
     public function hasOnlyDefaultValues()
     {
-            if ($this->version !== 0) {
-                return false;
-            }
-
         // otherwise, everything was equal, so return TRUE
         return true;
     } // hasOnlyDefaultValues()
@@ -826,18 +656,6 @@ abstract class Person implements ActiveRecordInterface
                 $col = null;
             }
             $this->updated_at = (null !== $col) ? PropelDateTime::newInstance($col, null, '\DateTime') : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : PersonTableMap::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->version = (null !== $col) ? (int) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : PersonTableMap::translateFieldName('VersionCreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
-            if ($col === '0000-00-00 00:00:00') {
-                $col = null;
-            }
-            $this->version_created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, '\DateTime') : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : PersonTableMap::translateFieldName('VersionCreatedBy', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->version_created_by = (null !== $col) ? (string) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -846,7 +664,7 @@ abstract class Person implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 8; // 8 = PersonTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 5; // 5 = PersonTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating \Team\Model\Person object", 0, $e);
@@ -914,8 +732,6 @@ abstract class Person implements ActiveRecordInterface
             $this->collPersonFunctionLinks = null;
 
             $this->collPersonI18ns = null;
-
-            $this->collPersonVersions = null;
 
         } // if (deep)
     }
@@ -985,14 +801,6 @@ abstract class Person implements ActiveRecordInterface
         $isInsert = $this->isNew();
         try {
             $ret = $this->preSave($con);
-            // versionable behavior
-            if ($this->isVersioningNecessary()) {
-                $this->setVersion($this->isNew() ? 1 : $this->getLastVersionNumber($con) + 1);
-                if (!$this->isColumnModified(PersonTableMap::VERSION_CREATED_AT)) {
-                    $this->setVersionCreatedAt(time());
-                }
-                $createVersion = true; // for postSave hook
-            }
             if ($isInsert) {
                 $ret = $ret && $this->preInsert($con);
                 // timestampable behavior
@@ -1017,10 +825,6 @@ abstract class Person implements ActiveRecordInterface
                     $this->postUpdate($con);
                 }
                 $this->postSave($con);
-                // versionable behavior
-                if (isset($createVersion)) {
-                    $this->addVersion($con);
-                }
                 PersonTableMap::addInstanceToPool($this);
             } else {
                 $affectedRows = 0;
@@ -1130,23 +934,6 @@ abstract class Person implements ActiveRecordInterface
                 }
             }
 
-            if ($this->personVersionsScheduledForDeletion !== null) {
-                if (!$this->personVersionsScheduledForDeletion->isEmpty()) {
-                    \Team\Model\PersonVersionQuery::create()
-                        ->filterByPrimaryKeys($this->personVersionsScheduledForDeletion->getPrimaryKeys(false))
-                        ->delete($con);
-                    $this->personVersionsScheduledForDeletion = null;
-                }
-            }
-
-                if ($this->collPersonVersions !== null) {
-            foreach ($this->collPersonVersions as $referrerFK) {
-                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
-                        $affectedRows += $referrerFK->save($con);
-                    }
-                }
-            }
-
             $this->alreadyInSave = false;
 
         }
@@ -1188,15 +975,6 @@ abstract class Person implements ActiveRecordInterface
         if ($this->isColumnModified(PersonTableMap::UPDATED_AT)) {
             $modifiedColumns[':p' . $index++]  = 'UPDATED_AT';
         }
-        if ($this->isColumnModified(PersonTableMap::VERSION)) {
-            $modifiedColumns[':p' . $index++]  = 'VERSION';
-        }
-        if ($this->isColumnModified(PersonTableMap::VERSION_CREATED_AT)) {
-            $modifiedColumns[':p' . $index++]  = 'VERSION_CREATED_AT';
-        }
-        if ($this->isColumnModified(PersonTableMap::VERSION_CREATED_BY)) {
-            $modifiedColumns[':p' . $index++]  = 'VERSION_CREATED_BY';
-        }
 
         $sql = sprintf(
             'INSERT INTO person (%s) VALUES (%s)',
@@ -1222,15 +1000,6 @@ abstract class Person implements ActiveRecordInterface
                         break;
                     case 'UPDATED_AT':
                         $stmt->bindValue($identifier, $this->updated_at ? $this->updated_at->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
-                        break;
-                    case 'VERSION':
-                        $stmt->bindValue($identifier, $this->version, PDO::PARAM_INT);
-                        break;
-                    case 'VERSION_CREATED_AT':
-                        $stmt->bindValue($identifier, $this->version_created_at ? $this->version_created_at->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
-                        break;
-                    case 'VERSION_CREATED_BY':
-                        $stmt->bindValue($identifier, $this->version_created_by, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -1309,15 +1078,6 @@ abstract class Person implements ActiveRecordInterface
             case 4:
                 return $this->getUpdatedAt();
                 break;
-            case 5:
-                return $this->getVersion();
-                break;
-            case 6:
-                return $this->getVersionCreatedAt();
-                break;
-            case 7:
-                return $this->getVersionCreatedBy();
-                break;
             default:
                 return null;
                 break;
@@ -1352,9 +1112,6 @@ abstract class Person implements ActiveRecordInterface
             $keys[2] => $this->getLastName(),
             $keys[3] => $this->getCreatedAt(),
             $keys[4] => $this->getUpdatedAt(),
-            $keys[5] => $this->getVersion(),
-            $keys[6] => $this->getVersionCreatedAt(),
-            $keys[7] => $this->getVersionCreatedBy(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1373,9 +1130,6 @@ abstract class Person implements ActiveRecordInterface
             }
             if (null !== $this->collPersonI18ns) {
                 $result['PersonI18ns'] = $this->collPersonI18ns->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
-            }
-            if (null !== $this->collPersonVersions) {
-                $result['PersonVersions'] = $this->collPersonVersions->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
         }
 
@@ -1426,15 +1180,6 @@ abstract class Person implements ActiveRecordInterface
             case 4:
                 $this->setUpdatedAt($value);
                 break;
-            case 5:
-                $this->setVersion($value);
-                break;
-            case 6:
-                $this->setVersionCreatedAt($value);
-                break;
-            case 7:
-                $this->setVersionCreatedBy($value);
-                break;
         } // switch()
     }
 
@@ -1464,9 +1209,6 @@ abstract class Person implements ActiveRecordInterface
         if (array_key_exists($keys[2], $arr)) $this->setLastName($arr[$keys[2]]);
         if (array_key_exists($keys[3], $arr)) $this->setCreatedAt($arr[$keys[3]]);
         if (array_key_exists($keys[4], $arr)) $this->setUpdatedAt($arr[$keys[4]]);
-        if (array_key_exists($keys[5], $arr)) $this->setVersion($arr[$keys[5]]);
-        if (array_key_exists($keys[6], $arr)) $this->setVersionCreatedAt($arr[$keys[6]]);
-        if (array_key_exists($keys[7], $arr)) $this->setVersionCreatedBy($arr[$keys[7]]);
     }
 
     /**
@@ -1483,9 +1225,6 @@ abstract class Person implements ActiveRecordInterface
         if ($this->isColumnModified(PersonTableMap::LAST_NAME)) $criteria->add(PersonTableMap::LAST_NAME, $this->last_name);
         if ($this->isColumnModified(PersonTableMap::CREATED_AT)) $criteria->add(PersonTableMap::CREATED_AT, $this->created_at);
         if ($this->isColumnModified(PersonTableMap::UPDATED_AT)) $criteria->add(PersonTableMap::UPDATED_AT, $this->updated_at);
-        if ($this->isColumnModified(PersonTableMap::VERSION)) $criteria->add(PersonTableMap::VERSION, $this->version);
-        if ($this->isColumnModified(PersonTableMap::VERSION_CREATED_AT)) $criteria->add(PersonTableMap::VERSION_CREATED_AT, $this->version_created_at);
-        if ($this->isColumnModified(PersonTableMap::VERSION_CREATED_BY)) $criteria->add(PersonTableMap::VERSION_CREATED_BY, $this->version_created_by);
 
         return $criteria;
     }
@@ -1553,9 +1292,6 @@ abstract class Person implements ActiveRecordInterface
         $copyObj->setLastName($this->getLastName());
         $copyObj->setCreatedAt($this->getCreatedAt());
         $copyObj->setUpdatedAt($this->getUpdatedAt());
-        $copyObj->setVersion($this->getVersion());
-        $copyObj->setVersionCreatedAt($this->getVersionCreatedAt());
-        $copyObj->setVersionCreatedBy($this->getVersionCreatedBy());
 
         if ($deepCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -1583,12 +1319,6 @@ abstract class Person implements ActiveRecordInterface
             foreach ($this->getPersonI18ns() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
                     $copyObj->addPersonI18n($relObj->copy($deepCopy));
-                }
-            }
-
-            foreach ($this->getPersonVersions() as $relObj) {
-                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addPersonVersion($relObj->copy($deepCopy));
                 }
             }
 
@@ -1644,9 +1374,6 @@ abstract class Person implements ActiveRecordInterface
         }
         if ('PersonI18n' == $relationName) {
             return $this->initPersonI18ns();
-        }
-        if ('PersonVersion' == $relationName) {
-            return $this->initPersonVersions();
         }
     }
 
@@ -2580,227 +2307,6 @@ abstract class Person implements ActiveRecordInterface
     }
 
     /**
-     * Clears out the collPersonVersions collection
-     *
-     * This does not modify the database; however, it will remove any associated objects, causing
-     * them to be refetched by subsequent calls to accessor method.
-     *
-     * @return void
-     * @see        addPersonVersions()
-     */
-    public function clearPersonVersions()
-    {
-        $this->collPersonVersions = null; // important to set this to NULL since that means it is uninitialized
-    }
-
-    /**
-     * Reset is the collPersonVersions collection loaded partially.
-     */
-    public function resetPartialPersonVersions($v = true)
-    {
-        $this->collPersonVersionsPartial = $v;
-    }
-
-    /**
-     * Initializes the collPersonVersions collection.
-     *
-     * By default this just sets the collPersonVersions collection to an empty array (like clearcollPersonVersions());
-     * however, you may wish to override this method in your stub class to provide setting appropriate
-     * to your application -- for example, setting the initial array to the values stored in database.
-     *
-     * @param      boolean $overrideExisting If set to true, the method call initializes
-     *                                        the collection even if it is not empty
-     *
-     * @return void
-     */
-    public function initPersonVersions($overrideExisting = true)
-    {
-        if (null !== $this->collPersonVersions && !$overrideExisting) {
-            return;
-        }
-        $this->collPersonVersions = new ObjectCollection();
-        $this->collPersonVersions->setModel('\Team\Model\PersonVersion');
-    }
-
-    /**
-     * Gets an array of ChildPersonVersion objects which contain a foreign key that references this object.
-     *
-     * If the $criteria is not null, it is used to always fetch the results from the database.
-     * Otherwise the results are fetched from the database the first time, then cached.
-     * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this ChildPerson is new, it will return
-     * an empty collection or the current collection; the criteria is ignored on a new object.
-     *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @return Collection|ChildPersonVersion[] List of ChildPersonVersion objects
-     * @throws PropelException
-     */
-    public function getPersonVersions($criteria = null, ConnectionInterface $con = null)
-    {
-        $partial = $this->collPersonVersionsPartial && !$this->isNew();
-        if (null === $this->collPersonVersions || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collPersonVersions) {
-                // return empty collection
-                $this->initPersonVersions();
-            } else {
-                $collPersonVersions = ChildPersonVersionQuery::create(null, $criteria)
-                    ->filterByPerson($this)
-                    ->find($con);
-
-                if (null !== $criteria) {
-                    if (false !== $this->collPersonVersionsPartial && count($collPersonVersions)) {
-                        $this->initPersonVersions(false);
-
-                        foreach ($collPersonVersions as $obj) {
-                            if (false == $this->collPersonVersions->contains($obj)) {
-                                $this->collPersonVersions->append($obj);
-                            }
-                        }
-
-                        $this->collPersonVersionsPartial = true;
-                    }
-
-                    reset($collPersonVersions);
-
-                    return $collPersonVersions;
-                }
-
-                if ($partial && $this->collPersonVersions) {
-                    foreach ($this->collPersonVersions as $obj) {
-                        if ($obj->isNew()) {
-                            $collPersonVersions[] = $obj;
-                        }
-                    }
-                }
-
-                $this->collPersonVersions = $collPersonVersions;
-                $this->collPersonVersionsPartial = false;
-            }
-        }
-
-        return $this->collPersonVersions;
-    }
-
-    /**
-     * Sets a collection of PersonVersion objects related by a one-to-many relationship
-     * to the current object.
-     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
-     * and new objects from the given Propel collection.
-     *
-     * @param      Collection $personVersions A Propel collection.
-     * @param      ConnectionInterface $con Optional connection object
-     * @return   ChildPerson The current object (for fluent API support)
-     */
-    public function setPersonVersions(Collection $personVersions, ConnectionInterface $con = null)
-    {
-        $personVersionsToDelete = $this->getPersonVersions(new Criteria(), $con)->diff($personVersions);
-
-
-        //since at least one column in the foreign key is at the same time a PK
-        //we can not just set a PK to NULL in the lines below. We have to store
-        //a backup of all values, so we are able to manipulate these items based on the onDelete value later.
-        $this->personVersionsScheduledForDeletion = clone $personVersionsToDelete;
-
-        foreach ($personVersionsToDelete as $personVersionRemoved) {
-            $personVersionRemoved->setPerson(null);
-        }
-
-        $this->collPersonVersions = null;
-        foreach ($personVersions as $personVersion) {
-            $this->addPersonVersion($personVersion);
-        }
-
-        $this->collPersonVersions = $personVersions;
-        $this->collPersonVersionsPartial = false;
-
-        return $this;
-    }
-
-    /**
-     * Returns the number of related PersonVersion objects.
-     *
-     * @param      Criteria $criteria
-     * @param      boolean $distinct
-     * @param      ConnectionInterface $con
-     * @return int             Count of related PersonVersion objects.
-     * @throws PropelException
-     */
-    public function countPersonVersions(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
-    {
-        $partial = $this->collPersonVersionsPartial && !$this->isNew();
-        if (null === $this->collPersonVersions || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collPersonVersions) {
-                return 0;
-            }
-
-            if ($partial && !$criteria) {
-                return count($this->getPersonVersions());
-            }
-
-            $query = ChildPersonVersionQuery::create(null, $criteria);
-            if ($distinct) {
-                $query->distinct();
-            }
-
-            return $query
-                ->filterByPerson($this)
-                ->count($con);
-        }
-
-        return count($this->collPersonVersions);
-    }
-
-    /**
-     * Method called to associate a ChildPersonVersion object to this object
-     * through the ChildPersonVersion foreign key attribute.
-     *
-     * @param    ChildPersonVersion $l ChildPersonVersion
-     * @return   \Team\Model\Person The current object (for fluent API support)
-     */
-    public function addPersonVersion(ChildPersonVersion $l)
-    {
-        if ($this->collPersonVersions === null) {
-            $this->initPersonVersions();
-            $this->collPersonVersionsPartial = true;
-        }
-
-        if (!in_array($l, $this->collPersonVersions->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
-            $this->doAddPersonVersion($l);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param PersonVersion $personVersion The personVersion object to add.
-     */
-    protected function doAddPersonVersion($personVersion)
-    {
-        $this->collPersonVersions[]= $personVersion;
-        $personVersion->setPerson($this);
-    }
-
-    /**
-     * @param  PersonVersion $personVersion The personVersion object to remove.
-     * @return ChildPerson The current object (for fluent API support)
-     */
-    public function removePersonVersion($personVersion)
-    {
-        if ($this->getPersonVersions()->contains($personVersion)) {
-            $this->collPersonVersions->remove($this->collPersonVersions->search($personVersion));
-            if (null === $this->personVersionsScheduledForDeletion) {
-                $this->personVersionsScheduledForDeletion = clone $this->collPersonVersions;
-                $this->personVersionsScheduledForDeletion->clear();
-            }
-            $this->personVersionsScheduledForDeletion[]= clone $personVersion;
-            $personVersion->setPerson(null);
-        }
-
-        return $this;
-    }
-
-    /**
      * Clears the current object and sets all attributes to their default values
      */
     public function clear()
@@ -2810,12 +2316,8 @@ abstract class Person implements ActiveRecordInterface
         $this->last_name = null;
         $this->created_at = null;
         $this->updated_at = null;
-        $this->version = null;
-        $this->version_created_at = null;
-        $this->version_created_by = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
-        $this->applyDefaultValues();
         $this->resetModified();
         $this->setNew(true);
         $this->setDeleted(false);
@@ -2853,11 +2355,6 @@ abstract class Person implements ActiveRecordInterface
                     $o->clearAllReferences($deep);
                 }
             }
-            if ($this->collPersonVersions) {
-                foreach ($this->collPersonVersions as $o) {
-                    $o->clearAllReferences($deep);
-                }
-            }
         } // if ($deep)
 
         // i18n behavior
@@ -2868,7 +2365,6 @@ abstract class Person implements ActiveRecordInterface
         $this->collPersonImages = null;
         $this->collPersonFunctionLinks = null;
         $this->collPersonI18ns = null;
-        $this->collPersonVersions = null;
     }
 
     /**
@@ -3018,399 +2514,6 @@ abstract class Person implements ActiveRecordInterface
         return $this;
     }
 
-    // versionable behavior
-
-    /**
-     * Enforce a new Version of this object upon next save.
-     *
-     * @return \Team\Model\Person
-     */
-    public function enforceVersioning()
-    {
-        $this->enforceVersion = true;
-
-        return $this;
-    }
-
-    /**
-     * Checks whether the current state must be recorded as a version
-     *
-     * @return  boolean
-     */
-    public function isVersioningNecessary($con = null)
-    {
-        if ($this->alreadyInSave) {
-            return false;
-        }
-
-        if ($this->enforceVersion) {
-            return true;
-        }
-
-        if (ChildPersonQuery::isVersioningEnabled() && ($this->isNew() || $this->isModified()) || $this->isDeleted()) {
-            return true;
-        }
-        // to avoid infinite loops, emulate in save
-        $this->alreadyInSave = true;
-        foreach ($this->getPersonTeamLinks(null, $con) as $relatedObject) {
-            if ($relatedObject->isVersioningNecessary($con)) {
-                $this->alreadyInSave = false;
-
-                return true;
-            }
-        }
-        $this->alreadyInSave = false;
-
-        // to avoid infinite loops, emulate in save
-        $this->alreadyInSave = true;
-        foreach ($this->getPersonImages(null, $con) as $relatedObject) {
-            if ($relatedObject->isVersioningNecessary($con)) {
-                $this->alreadyInSave = false;
-
-                return true;
-            }
-        }
-        $this->alreadyInSave = false;
-
-        // to avoid infinite loops, emulate in save
-        $this->alreadyInSave = true;
-        foreach ($this->getPersonFunctionLinks(null, $con) as $relatedObject) {
-            if ($relatedObject->isVersioningNecessary($con)) {
-                $this->alreadyInSave = false;
-
-                return true;
-            }
-        }
-        $this->alreadyInSave = false;
-
-
-        return false;
-    }
-
-    /**
-     * Creates a version of the current object and saves it.
-     *
-     * @param   ConnectionInterface $con the connection to use
-     *
-     * @return  ChildPersonVersion A version object
-     */
-    public function addVersion($con = null)
-    {
-        $this->enforceVersion = false;
-
-        $version = new ChildPersonVersion();
-        $version->setId($this->getId());
-        $version->setFirstName($this->getFirstName());
-        $version->setLastName($this->getLastName());
-        $version->setCreatedAt($this->getCreatedAt());
-        $version->setUpdatedAt($this->getUpdatedAt());
-        $version->setVersion($this->getVersion());
-        $version->setVersionCreatedAt($this->getVersionCreatedAt());
-        $version->setVersionCreatedBy($this->getVersionCreatedBy());
-        $version->setPerson($this);
-        if ($relateds = $this->getPersonTeamLinks($con)->toKeyValue('Id', 'Version')) {
-            $version->setPersonTeamLinkIds(array_keys($relateds));
-            $version->setPersonTeamLinkVersions(array_values($relateds));
-        }
-        if ($relateds = $this->getPersonImages($con)->toKeyValue('Id', 'Version')) {
-            $version->setPersonImageIds(array_keys($relateds));
-            $version->setPersonImageVersions(array_values($relateds));
-        }
-        if ($relateds = $this->getPersonFunctionLinks($con)->toKeyValue('Id', 'Version')) {
-            $version->setPersonFunctionLinkIds(array_keys($relateds));
-            $version->setPersonFunctionLinkVersions(array_values($relateds));
-        }
-        $version->save($con);
-
-        return $version;
-    }
-
-    /**
-     * Sets the properties of the current object to the value they had at a specific version
-     *
-     * @param   integer $versionNumber The version number to read
-     * @param   ConnectionInterface $con The connection to use
-     *
-     * @return  ChildPerson The current object (for fluent API support)
-     */
-    public function toVersion($versionNumber, $con = null)
-    {
-        $version = $this->getOneVersion($versionNumber, $con);
-        if (!$version) {
-            throw new PropelException(sprintf('No ChildPerson object found with version %d', $version));
-        }
-        $this->populateFromVersion($version, $con);
-
-        return $this;
-    }
-
-    /**
-     * Sets the properties of the current object to the value they had at a specific version
-     *
-     * @param ChildPersonVersion $version The version object to use
-     * @param ConnectionInterface   $con the connection to use
-     * @param array                 $loadedObjects objects that been loaded in a chain of populateFromVersion calls on referrer or fk objects.
-     *
-     * @return ChildPerson The current object (for fluent API support)
-     */
-    public function populateFromVersion($version, $con = null, &$loadedObjects = array())
-    {
-        $loadedObjects['ChildPerson'][$version->getId()][$version->getVersion()] = $this;
-        $this->setId($version->getId());
-        $this->setFirstName($version->getFirstName());
-        $this->setLastName($version->getLastName());
-        $this->setCreatedAt($version->getCreatedAt());
-        $this->setUpdatedAt($version->getUpdatedAt());
-        $this->setVersion($version->getVersion());
-        $this->setVersionCreatedAt($version->getVersionCreatedAt());
-        $this->setVersionCreatedBy($version->getVersionCreatedBy());
-        if ($fkValues = $version->getPersonTeamLinkIds()) {
-            $this->clearPersonTeamLinks();
-            $fkVersions = $version->getPersonTeamLinkVersions();
-            $query = ChildPersonTeamLinkVersionQuery::create();
-            foreach ($fkValues as $key => $value) {
-                $c1 = $query->getNewCriterion(PersonTeamLinkVersionTableMap::ID, $value);
-                $c2 = $query->getNewCriterion(PersonTeamLinkVersionTableMap::VERSION, $fkVersions[$key]);
-                $c1->addAnd($c2);
-                $query->addOr($c1);
-            }
-            foreach ($query->find($con) as $relatedVersion) {
-                if (isset($loadedObjects['ChildPersonTeamLink']) && isset($loadedObjects['ChildPersonTeamLink'][$relatedVersion->getId()]) && isset($loadedObjects['ChildPersonTeamLink'][$relatedVersion->getId()][$relatedVersion->getVersion()])) {
-                    $related = $loadedObjects['ChildPersonTeamLink'][$relatedVersion->getId()][$relatedVersion->getVersion()];
-                } else {
-                    $related = new ChildPersonTeamLink();
-                    $related->populateFromVersion($relatedVersion, $con, $loadedObjects);
-                    $related->setNew(false);
-                }
-                $this->addPersonTeamLink($related);
-                $this->collPersonTeamLinksPartial = false;
-            }
-        }
-        if ($fkValues = $version->getPersonImageIds()) {
-            $this->clearPersonImage();
-            $fkVersions = $version->getPersonImageVersions();
-            $query = ChildPersonImageVersionQuery::create();
-            foreach ($fkValues as $key => $value) {
-                $c1 = $query->getNewCriterion(PersonImageVersionTableMap::ID, $value);
-                $c2 = $query->getNewCriterion(PersonImageVersionTableMap::VERSION, $fkVersions[$key]);
-                $c1->addAnd($c2);
-                $query->addOr($c1);
-            }
-            foreach ($query->find($con) as $relatedVersion) {
-                if (isset($loadedObjects['ChildPersonImage']) && isset($loadedObjects['ChildPersonImage'][$relatedVersion->getId()]) && isset($loadedObjects['ChildPersonImage'][$relatedVersion->getId()][$relatedVersion->getVersion()])) {
-                    $related = $loadedObjects['ChildPersonImage'][$relatedVersion->getId()][$relatedVersion->getVersion()];
-                } else {
-                    $related = new ChildPersonImage();
-                    $related->populateFromVersion($relatedVersion, $con, $loadedObjects);
-                    $related->setNew(false);
-                }
-                $this->addPersonImage($related);
-                $this->collPersonImagePartial = false;
-            }
-        }
-        if ($fkValues = $version->getPersonFunctionLinkIds()) {
-            $this->clearPersonFunctionLink();
-            $fkVersions = $version->getPersonFunctionLinkVersions();
-            $query = ChildPersonFunctionLinkVersionQuery::create();
-            foreach ($fkValues as $key => $value) {
-                $c1 = $query->getNewCriterion(PersonFunctionLinkVersionTableMap::ID, $value);
-                $c2 = $query->getNewCriterion(PersonFunctionLinkVersionTableMap::VERSION, $fkVersions[$key]);
-                $c1->addAnd($c2);
-                $query->addOr($c1);
-            }
-            foreach ($query->find($con) as $relatedVersion) {
-                if (isset($loadedObjects['ChildPersonFunctionLink']) && isset($loadedObjects['ChildPersonFunctionLink'][$relatedVersion->getId()]) && isset($loadedObjects['ChildPersonFunctionLink'][$relatedVersion->getId()][$relatedVersion->getVersion()])) {
-                    $related = $loadedObjects['ChildPersonFunctionLink'][$relatedVersion->getId()][$relatedVersion->getVersion()];
-                } else {
-                    $related = new ChildPersonFunctionLink();
-                    $related->populateFromVersion($relatedVersion, $con, $loadedObjects);
-                    $related->setNew(false);
-                }
-                $this->addPersonFunctionLink($related);
-                $this->collPersonFunctionLinkPartial = false;
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * Gets the latest persisted version number for the current object
-     *
-     * @param   ConnectionInterface $con the connection to use
-     *
-     * @return  integer
-     */
-    public function getLastVersionNumber($con = null)
-    {
-        $v = ChildPersonVersionQuery::create()
-            ->filterByPerson($this)
-            ->orderByVersion('desc')
-            ->findOne($con);
-        if (!$v) {
-            return 0;
-        }
-
-        return $v->getVersion();
-    }
-
-    /**
-     * Checks whether the current object is the latest one
-     *
-     * @param   ConnectionInterface $con the connection to use
-     *
-     * @return  Boolean
-     */
-    public function isLastVersion($con = null)
-    {
-        return $this->getLastVersionNumber($con) == $this->getVersion();
-    }
-
-    /**
-     * Retrieves a version object for this entity and a version number
-     *
-     * @param   integer $versionNumber The version number to read
-     * @param   ConnectionInterface $con the connection to use
-     *
-     * @return  ChildPersonVersion A version object
-     */
-    public function getOneVersion($versionNumber, $con = null)
-    {
-        return ChildPersonVersionQuery::create()
-            ->filterByPerson($this)
-            ->filterByVersion($versionNumber)
-            ->findOne($con);
-    }
-
-    /**
-     * Gets all the versions of this object, in incremental order
-     *
-     * @param   ConnectionInterface $con the connection to use
-     *
-     * @return  ObjectCollection A list of ChildPersonVersion objects
-     */
-    public function getAllVersions($con = null)
-    {
-        $criteria = new Criteria();
-        $criteria->addAscendingOrderByColumn(PersonVersionTableMap::VERSION);
-
-        return $this->getPersonVersions($criteria, $con);
-    }
-
-    /**
-     * Compares the current object with another of its version.
-     * <code>
-     * print_r($book->compareVersion(1));
-     * => array(
-     *   '1' => array('Title' => 'Book title at version 1'),
-     *   '2' => array('Title' => 'Book title at version 2')
-     * );
-     * </code>
-     *
-     * @param   integer             $versionNumber
-     * @param   string              $keys Main key used for the result diff (versions|columns)
-     * @param   ConnectionInterface $con the connection to use
-     * @param   array               $ignoredColumns  The columns to exclude from the diff.
-     *
-     * @return  array A list of differences
-     */
-    public function compareVersion($versionNumber, $keys = 'columns', $con = null, $ignoredColumns = array())
-    {
-        $fromVersion = $this->toArray();
-        $toVersion = $this->getOneVersion($versionNumber, $con)->toArray();
-
-        return $this->computeDiff($fromVersion, $toVersion, $keys, $ignoredColumns);
-    }
-
-    /**
-     * Compares two versions of the current object.
-     * <code>
-     * print_r($book->compareVersions(1, 2));
-     * => array(
-     *   '1' => array('Title' => 'Book title at version 1'),
-     *   '2' => array('Title' => 'Book title at version 2')
-     * );
-     * </code>
-     *
-     * @param   integer             $fromVersionNumber
-     * @param   integer             $toVersionNumber
-     * @param   string              $keys Main key used for the result diff (versions|columns)
-     * @param   ConnectionInterface $con the connection to use
-     * @param   array               $ignoredColumns  The columns to exclude from the diff.
-     *
-     * @return  array A list of differences
-     */
-    public function compareVersions($fromVersionNumber, $toVersionNumber, $keys = 'columns', $con = null, $ignoredColumns = array())
-    {
-        $fromVersion = $this->getOneVersion($fromVersionNumber, $con)->toArray();
-        $toVersion = $this->getOneVersion($toVersionNumber, $con)->toArray();
-
-        return $this->computeDiff($fromVersion, $toVersion, $keys, $ignoredColumns);
-    }
-
-    /**
-     * Computes the diff between two versions.
-     * <code>
-     * print_r($book->computeDiff(1, 2));
-     * => array(
-     *   '1' => array('Title' => 'Book title at version 1'),
-     *   '2' => array('Title' => 'Book title at version 2')
-     * );
-     * </code>
-     *
-     * @param   array     $fromVersion     An array representing the original version.
-     * @param   array     $toVersion       An array representing the destination version.
-     * @param   string    $keys            Main key used for the result diff (versions|columns).
-     * @param   array     $ignoredColumns  The columns to exclude from the diff.
-     *
-     * @return  array A list of differences
-     */
-    protected function computeDiff($fromVersion, $toVersion, $keys = 'columns', $ignoredColumns = array())
-    {
-        $fromVersionNumber = $fromVersion['Version'];
-        $toVersionNumber = $toVersion['Version'];
-        $ignoredColumns = array_merge(array(
-            'Version',
-            'VersionCreatedAt',
-            'VersionCreatedBy',
-        ), $ignoredColumns);
-        $diff = array();
-        foreach ($fromVersion as $key => $value) {
-            if (in_array($key, $ignoredColumns)) {
-                continue;
-            }
-            if ($toVersion[$key] != $value) {
-                switch ($keys) {
-                    case 'versions':
-                        $diff[$fromVersionNumber][$key] = $value;
-                        $diff[$toVersionNumber][$key] = $toVersion[$key];
-                        break;
-                    default:
-                        $diff[$key] = array(
-                            $fromVersionNumber => $value,
-                            $toVersionNumber => $toVersion[$key],
-                        );
-                        break;
-                }
-            }
-        }
-
-        return $diff;
-    }
-    /**
-     * retrieve the last $number versions.
-     *
-     * @param Integer $number the number of record to return.
-     * @return PropelCollection|array \Team\Model\PersonVersion[] List of \Team\Model\PersonVersion objects
-     */
-    public function getLastVersions($number = 10, $criteria = null, $con = null)
-    {
-        $criteria = ChildPersonVersionQuery::create(null, $criteria);
-        $criteria->addDescendingOrderByColumn(PersonVersionTableMap::VERSION);
-        $criteria->limit($number);
-
-        return $this->getPersonVersions($criteria, $con);
-    }
     /**
      * Code to be run before persisting the object
      * @param  ConnectionInterface $con
