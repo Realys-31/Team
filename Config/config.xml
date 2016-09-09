@@ -64,6 +64,7 @@
         <hook id="team.admin.hook" class="Team\Hook\AdminInterfaceHook" scope="request">
             <tag name="hook.event_listener" event="main.top-menu-modules" type="back" method="onMenuModule"/>
             <argument type="service" id="router.team"/>
+            <argument type="service" id="thelia.securityContext"/>
         </hook>
     </hooks>
 
